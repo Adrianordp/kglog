@@ -14,7 +14,7 @@
 - [x] Run `uv run django-admin startproject config backend/`
 - [ ] Create `backend/apps/` package directory
 - [x] Split settings into `config/settings/base.py`, `dev.py`, `prod.py`
-- [ ] Install and configure `django-environ`; load all secrets and DB URL from `.env`
+- [x] Install and configure `django-environ`; load all secrets and DB URL from `.env`
 - [ ] Add `requirements/base.txt`, `dev.txt`, `prod.txt`
 - [ ] Confirm `python manage.py check` passes
 
