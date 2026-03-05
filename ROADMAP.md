@@ -15,8 +15,8 @@
 - [ ] Create `backend/apps/` package directory
 - [x] Split settings into `config/settings/base.py`, `dev.py`, `prod.py`
 - [x] Install and configure `django-environ`; load all secrets and DB URL from `.env`
-- [ ] Add `requirements/base.txt`, `dev.txt`, `prod.txt`
-- [ ] Confirm `python manage.py check` passes
+- [x] Add requirements to `pyproject.toml` under `[dependency-groups]` for `dev` and `prod`
+- [x] Confirm `uv run python backend/manage.py check` passes
 
 ### feat/docker-local
 - [ ] Write `backend/Dockerfile` (dev stage with hot-reload)
