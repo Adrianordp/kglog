@@ -6,7 +6,7 @@
 - [ ] Create top-level folder structure: `backend/`, `frontend/`
 - [ ] Add `.gitignore` (Python, Node, env files, IDE)
 - [ ] Add `.env.example` with all required variable keys (no values)
-- [ ] Add `README.md` skeleton with project description and local setup instructions
+- [x] Add `README.md` skeleton with project description and local setup instructions
 
 ### feat/django-bootstrap
 - [ ] Run `django-admin startproject config backend/`
