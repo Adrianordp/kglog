@@ -9,7 +9,7 @@
 - [x] Add `README.md` skeleton with project description and local setup instructions
 
 ### feat/django-bootstrap
-- [ ] Create and activate Python virtual environment with uv with Python 3.13
+- [x] Create and activate Python virtual environment with uv with Python 3.13
 - [ ] Install Django 6 and create `backend/` Django project
 - [ ] Set up basic project structure with `config/` for settings and `apps/` for Django apps
 - [ ] Run `django-admin startproject config backend/`
