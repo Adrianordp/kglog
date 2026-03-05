@@ -12,3 +12,6 @@ dependencies = [
 dev = [
     "django-debug-toolbar>=6.2.0",
 ]
+prod = [
+    "gunicorn>=25.1.0",
+]
