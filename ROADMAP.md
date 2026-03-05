@@ -4,7 +4,7 @@
 
 ### feat/repo-init
 - [x] Create top-level folder structure: `backend/`, `frontend/`
-- [ ] Add `.gitignore`
+- [x] Add `.gitignore`
 - [x] Add `.env.example` with all required variable keys (no values)
 - [x] Add `README.md` skeleton with project description and local setup instructions
 
