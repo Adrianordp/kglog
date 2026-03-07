@@ -1,0 +1,13 @@
+# Folders
+__pycache__/
+
+# Files
+Dockerfile
+
+# Hidden folders
+.venv/
+
+# Hidden files
+.dockerignore
+.env
+
