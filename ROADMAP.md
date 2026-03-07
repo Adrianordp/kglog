@@ -12,7 +12,7 @@
 - [x] Create and activate Python virtual environment with uv with Python 3.13
 - [x] Install Django 6 and other core dependencies
 - [x] Run `uv run django-admin startproject config backend/`
-- [ ] Create `backend/apps/` package directory
+- [x] Create `backend/apps/` package directory
 - [x] Split settings into `config/settings/base.py`, `dev.py`, `prod.py`
 - [x] Install and configure `django-environ`; load all secrets and DB URL from `.env`
 - [x] Add requirements to `pyproject.toml` under `[dependency-groups]` for `dev` and `prod`
