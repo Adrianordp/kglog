@@ -19,7 +19,7 @@
 - [x] Confirm `uv run python backend/manage.py check` passes
 
 ### feat/docker-local
-- [ ] Write `backend/Dockerfile` (dev stage with hot-reload)
+- [x] Write `backend/Dockerfile` (dev stage with hot-reload)
 - [ ] Write `frontend/Dockerfile` (dev stage with Vite HMR)
 - [ ] Write `docker-compose.yml` with services: `db` (postgres:16), `redis`, `backend`, `frontend`
 - [ ] Mount volumes for code hot-reload in both services
