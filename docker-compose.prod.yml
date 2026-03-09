@@ -1,0 +1,19 @@
+services:
+  kglog_backend:
+    container_name: kglog_backend_prod
+    ports:
+      - "8001:8001"
+    command: uv run gunicorn config.wsgi:application --bind 0.0.0.0:8001
+
+  kglog_frontend:
+    container_name: kglog_frontend_prod
+    ports:
+      - "4173:4173"
+    command: >-
+      sh -c "if [ -f package.json ]; then npm run build && npm run preview -- --host 0.0.0.0 --port 4173; else echo 'No package.json found in /app.' && exit 1; fi"
+
+  kglog_postgres:
+    container_name: kglog_postgres_prod
+
+  kglog_redis:
+    container_name: kglog_redis_prod
