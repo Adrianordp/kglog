@@ -1,0 +1,8 @@
+services:
+  kglog:
+    build:
+      context: ./backend/
+    container_name: kglog_prod
+    ports:
+      - "8001:8001"
+    command: gunicorn main:app --bind 0.0.0.0:8001
