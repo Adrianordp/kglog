@@ -21,9 +21,9 @@
 ### feat/docker-local
 - [x] Write `backend/Dockerfile` (dev stage with hot-reload)
 - [x] Write `frontend/Dockerfile` (dev stage with Vite HMR)
-- [ ] Write `docker-compose.yml` with services: `db` (postgres:16), `redis`, `backend`, `frontend`
-- [ ] Mount volumes for code hot-reload in both services
-- [ ] Confirm `docker-compose up` boots all services cleanly
+- [x] Write `docker-compose.yml` with services: `db` (postgres:16), `redis`, `backend`, `frontend`
+- [x] Mount volumes for code hot-reload in both services
+- [x] Confirm `docker-compose up` boots all services cleanly
 
 ---
 
