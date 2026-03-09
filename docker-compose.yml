@@ -2,18 +2,27 @@ services:
   kglog_backend:
     build:
       context: ./backend/
-    container_name: kglog_backend_prod
-    ports:
-      - "8001:8001"
+    container_name: kglog_backend
+    env_file:
+      - .env
     depends_on:
       - kglog_postgres
+      - kglog_redis
     networks:
       - kglog_shared
-    command: gunicorn main:app --bind 0.0.0.0:8001
+
+  kglog_frontend:
+    build:
+      context: ./frontend/
+    container_name: kglog_frontend
+    depends_on:
+      - kglog_backend
+    networks:
+      - kglog_shared
 
   kglog_postgres:
     image: postgres:16
-    container_name: kglog_postgres_prod
+    container_name: kglog_postgres
     environment:
       POSTGRES_DB: kglog
       POSTGRES_USER: kglog
@@ -22,6 +31,14 @@ services:
       - pgdata:/var/lib/postgresql/data
     ports:
       - "5432:5432"
+    networks:
+      - kglog_shared
+
+  kglog_redis:
+    image: redis:7-alpine
+    container_name: kglog_redis
+    ports:
+      - "6379:6379"
     networks:
       - kglog_shared
 
