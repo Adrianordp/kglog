@@ -7,6 +7,8 @@ services:
       - "8001:8001"
     depends_on:
       - kglog_postgres
+    networks:
+      - kglog_shared
     command: gunicorn main:app --bind 0.0.0.0:8001
 
   kglog_postgres:
@@ -20,6 +22,12 @@ services:
       - pgdata:/var/lib/postgresql/data
     ports:
       - "5432:5432"
+    networks:
+      - kglog_shared
 
 volumes:
   pgdata:
+
+networks:
+  kglog_shared:
+    external: true
