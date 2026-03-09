@@ -1,0 +1,7 @@
+services:
+  kglog:
+    container_name: kglog_dev
+    volumes:
+      - ./backend:/app
+      - /app/.venv
+    command: uv run python main.py
