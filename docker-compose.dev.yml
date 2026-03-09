@@ -1,6 +1,6 @@
 services:
-  kglog:
-    container_name: kglog_dev
+  kglog_backend:
+    container_name: kglog_backend_dev
     volumes:
       - ./backend:/app
       - /app/.venv
