@@ -1,8 +1,8 @@
 services:
-  kglog:
+  kglog_backend:
     build:
       context: ./backend/
-    container_name: kglog_prod
+    container_name: kglog_backend_prod
     ports:
       - "8001:8001"
     depends_on:
