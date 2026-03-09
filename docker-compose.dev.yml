@@ -4,4 +4,7 @@ services:
     volumes:
       - ./backend:/app
       - /app/.venv
-    command: uv run python main.py
+    command: uv run python manage.py runserver 0.0.0.0:8001
+
+  kglog_postgres:
+    container_name: kglog_postgres_dev
