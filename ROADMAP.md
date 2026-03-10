@@ -33,7 +33,7 @@
 - [x] Create Django app `apps/users`
 - [x] Define `User` model extending `AbstractUser` (email as primary login field)
 - [x] Set `AUTH_USER_MODEL = "users.User"` in base settings
-- [ ] Create and run initial migration
+- [x] Create and run initial migration
 - [ ] Register `User` in Django admin
 
 ### feat/social-auth-backend
