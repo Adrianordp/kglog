@@ -35,6 +35,8 @@
 - [x] Set `AUTH_USER_MODEL = "users.User"` in base settings
 - [x] Create and run initial migration
 - [x] Register `User` in Django admin
+- [x] Manually test creating a user via admin and logging in with:
+  - `docker compose exec kglog_backend uv run python manage.py createsuperuser`
 
 ### feat/social-auth-backend
 - [ ] Install `django-allauth`, `dj-rest-auth`, `djangorestframework-simplejwt`
