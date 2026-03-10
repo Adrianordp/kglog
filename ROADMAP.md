@@ -30,7 +30,7 @@
 ## release/logweight-v0.2.0 — Authentication
 
 ### feat/custom-user-model
-- [ ] Create Django app `apps/users`
+- [x] Create Django app `apps/users`
 - [ ] Define `User` model extending `AbstractUser` (email as primary login field)
 - [ ] Set `AUTH_USER_MODEL = "users.User"` in base settings
 - [ ] Create and run initial migration
