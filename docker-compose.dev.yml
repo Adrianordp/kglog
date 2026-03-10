@@ -2,11 +2,11 @@ services:
   kglog_backend:
     container_name: kglog_backend_dev
     ports:
-      - "8001:8001"
+      - "9000:9000"
     volumes:
       - ./backend:/app
       - /app/.venv
-    command: uv run python manage.py runserver 0.0.0.0:8001
+    command: uv run python manage.py runserver 0.0.0.0:9000
 
   kglog_frontend:
     container_name: kglog_frontend_dev

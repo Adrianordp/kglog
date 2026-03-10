@@ -8,6 +8,6 @@ COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /bin/
 
 RUN uv sync
 
-EXPOSE 8000
+EXPOSE 9000
 
 CMD ["uv", "run", "python", "main.py"]

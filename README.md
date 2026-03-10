@@ -97,9 +97,9 @@ docker-compose up --build
 | Service | URL |
 |---|---|
 | React frontend (Vite HMR) | http://localhost:5173 |
-| Django API | http://localhost:8000 |
-| API docs (Swagger UI) | http://localhost:8000/api/docs/ |
-| Django admin | http://localhost:8000/admin/ |
+| Django API | http://localhost:9000 |
+| API docs (Swagger UI) | http://localhost:9000/api/docs/ |
+| Django admin | http://localhost:9000/admin/ |
 
 ### Running tests
 
