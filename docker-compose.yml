@@ -2,7 +2,6 @@ services:
   kglog_backend:
     build:
       context: ./backend/
-    container_name: kglog_backend
     env_file:
       - .env
     depends_on:
@@ -14,7 +13,6 @@ services:
   kglog_frontend:
     build:
       context: ./frontend/
-    container_name: kglog_frontend
     depends_on:
       - kglog_backend
     networks:
@@ -22,23 +20,17 @@ services:
 
   kglog_postgres:
     image: postgres:16
-    container_name: kglog_postgres
     environment:
       POSTGRES_DB: kglog
       POSTGRES_USER: kglog
       POSTGRES_PASSWORD: kglog
     volumes:
       - pgdata:/var/lib/postgresql/data
-    ports:
-      - "5432:5432"
     networks:
       - kglog_shared
 
   kglog_redis:
     image: redis:7-alpine
-    container_name: kglog_redis
-    ports:
-      - "6379:6379"
     networks:
       - kglog_shared
 
@@ -47,4 +39,4 @@ volumes:
 
 networks:
   kglog_shared:
-    external: true
+    driver: bridge
