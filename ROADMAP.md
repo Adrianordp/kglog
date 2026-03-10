@@ -32,7 +32,7 @@
 ### feat/custom-user-model
 - [x] Create Django app `apps/users`
 - [x] Define `User` model extending `AbstractUser` (email as primary login field)
-- [ ] Set `AUTH_USER_MODEL = "users.User"` in base settings
+- [x] Set `AUTH_USER_MODEL = "users.User"` in base settings
 - [ ] Create and run initial migration
 - [ ] Register `User` in Django admin
 
