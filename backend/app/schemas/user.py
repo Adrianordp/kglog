@@ -33,7 +33,7 @@ class UserCreate(UserBase):
     password: str = Field(..., description="Password for the user")
 
     model_config = {
-        "schema_extra": {
+        "json_schema_extra": {
             "example": {
                 "username": "john_doe",
                 "email": "john_doe@example.com",
@@ -65,7 +65,7 @@ class UserUpdate(BaseModel):
     password: Optional[str] = Field(None, description="Password for the user")
 
     model_config = {
-        "schema_extra": {
+        "json_schema_extra": {
             "example": {
                 "username": "john_doe_updated",
                 "email": "john_doe_updated@example.com",
@@ -92,7 +92,7 @@ class UserRead(UserBase):
     )
 
     model_config = {
-        "schema_extra": {
+        "json_schema_extra": {
             "example": {
                 "id": 1,
                 "username": "john_doe",
