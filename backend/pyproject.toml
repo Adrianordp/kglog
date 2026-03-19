@@ -12,3 +12,9 @@ dependencies = [
     "pydantic[email]>=2.12.5",
     "sqlalchemy>=2.0.48",
 ]
+
+[dependency-groups]
+dev = [
+    "pytest>=9.0.2",
+    "ruff>=0.15.6",
+]
