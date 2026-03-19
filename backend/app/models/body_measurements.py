@@ -36,7 +36,7 @@ class BodyMeasurements(Base):
     )
     measure_date: Mapped[date] = mapped_column(Date)
     height: Mapped[float] = mapped_column(Float)
-    neck_circumference: Mapped[float] = mapped_column(Float)
+    neck: Mapped[float] = mapped_column(Float)
     neck_to_shoulder: Mapped[float] = mapped_column(Float)
     sleeve: Mapped[float] = mapped_column(Float)
     bust: Mapped[float] = mapped_column(Float)
