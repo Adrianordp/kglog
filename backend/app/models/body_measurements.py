@@ -29,6 +29,8 @@ from app.models.base import Base
 
 
 class BodyMeasurements(Base):
+    __tablename__ = "body_measurements"
+
     id: Mapped[int] = mapped_column(
         Integer, primary_key=True, autoincrement=True
     )
