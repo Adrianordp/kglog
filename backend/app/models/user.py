@@ -52,6 +52,9 @@ class User(Base):
         onupdate=lambda: datetime.now(timezone.utc),
     )
 
+    body_compositions: Mapped[list["BodyComposition"]] = relationship(
+        "BodyComposition", back_populates="user", cascade="all, delete-orphan"
+    )
     body_measurements: Mapped[list["BodyMeasurements"]] = relationship(
         "BodyMeasurements", back_populates="user", cascade="all, delete-orphan"
     )
