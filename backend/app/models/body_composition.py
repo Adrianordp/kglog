@@ -44,4 +44,4 @@ class BodyComposition(Base):
     bone_kg: Mapped[float] = mapped_column(Float)
     water_percentage: Mapped[float] = mapped_column(Float)
     water_kg: Mapped[float] = mapped_column(Float)
-    visceral_fat_level: Mapped[float] = mapped_column(Float)
+    visceral_fat: Mapped[float] = mapped_column(Float)
