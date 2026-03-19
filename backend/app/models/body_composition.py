@@ -31,6 +31,7 @@ class BodyComposition(Base):
     id: Mapped[int] = mapped_column(
         Integer, primary_key=True, autoincrement=True
     )
+
     measure_date: Mapped[date] = mapped_column(Date)
     weight: Mapped[float] = mapped_column(Float)
     fat_percentage: Mapped[float] = mapped_column(Float)
