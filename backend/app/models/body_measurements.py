@@ -14,7 +14,8 @@ This model represents the body measurements of a user, including:
 - inseam to ankle length
 - left leg circumference (widest point)
 - right leg circumference (widest point)
-- calf circumference (widest point)
+- left_calf circumference (widest point)
+- right_calf circumference (widest point)
 
 This model is used to track the user's body measurements over time, which can be
 useful for tracking fitness and health progress.
@@ -47,4 +48,5 @@ class BodyMeasurements(Base):
     inseam_to_ankle: Mapped[float] = mapped_column(Float)
     left_leg: Mapped[float] = mapped_column(Float)
     right_leg: Mapped[float] = mapped_column(Float)
-    calf: Mapped[float] = mapped_column(Float)
+    left_calf: Mapped[float] = mapped_column(Float)
+    right_calf: Mapped[float] = mapped_column(Float)
