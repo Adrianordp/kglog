@@ -16,19 +16,30 @@ class BodyCompositionBase(BaseModel):
     measure_date: datetime = Field(
         ..., description="Date of measurement in YYYY-MM-DDTHH:MM:SS format"
     )
-    weight: float = Field(..., description="Weight in kilograms")
+    weight: float = Field(..., description="Weight in kilograms", gt=0.0)
     fat_percentage: float = Field(
-        ..., description="Body fat percentage as a decimal (e.g., 0.15 for 15%)"
+        ...,
+        description="Body fat percentage as a decimal (e.g., 0.15 for 15%)",
+        gt=0.0,
+        lt=1.0,
     )
     muscle_percentage: float = Field(
         ...,
         description="Muscle mass percentage as a decimal (e.g., 0.40 for 40%)",
+        gt=0.0,
+        lt=1.0,
     )
     bone_percentage: float = Field(
-        ..., description="Bone mass percentage as a decimal (e.g., 0.05 for 5%)"
+        ...,
+        description="Bone mass percentage as a decimal (e.g., 0.05 for 5%)",
+        gt=0.0,
+        lt=1.0,
     )
     water_percentage: float = Field(
-        ..., description="Water percentage as a decimal (e.g., 0.60 for 60%)"
+        ...,
+        description="Water percentage as a decimal (e.g., 0.60 for 60%)",
+        gt=0.0,
+        lt=1.0,
     )
 
 
@@ -59,21 +70,32 @@ class BodyCompositionUpdate(BaseModel):
     measure_date: Optional[datetime] = Field(
         None, description="Date of measurement in YYYY-MM-DDTHH:MM:SS format"
     )
-    weight: Optional[float] = Field(None, description="Weight in kilograms")
+    weight: Optional[float] = Field(
+        None, description="Weight in kilograms", gt=0.0
+    )
     fat_percentage: Optional[float] = Field(
         None,
         description="Body fat percentage as a decimal (e.g., 0.15 for 15%)",
+        gt=0.0,
+        lt=1.0,
     )
     muscle_percentage: Optional[float] = Field(
         None,
         description="Muscle mass percentage as a decimal (e.g., 0.40 for 40%)",
+        gt=0.0,
+        lt=1.0,
     )
     bone_percentage: Optional[float] = Field(
         None,
         description="Bone mass percentage as a decimal (e.g., 0.05 for 5%)",
+        gt=0.0,
+        lt=1.0,
     )
     water_percentage: Optional[float] = Field(
-        None, description="Water percentage as a decimal (e.g., 0.60 for 60%)"
+        None,
+        description="Water percentage as a decimal (e.g., 0.60 for 60%)",
+        gt=0.0,
+        lt=1.0,
     )
 
     model_config = {
