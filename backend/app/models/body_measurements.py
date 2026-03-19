@@ -35,6 +35,7 @@ class BodyMeasurements(Base):
     id: Mapped[int] = mapped_column(
         Integer, primary_key=True, autoincrement=True
     )
+
     measure_date: Mapped[date] = mapped_column(Date)
     height: Mapped[float] = mapped_column(Float)
     neck: Mapped[float] = mapped_column(Float)
