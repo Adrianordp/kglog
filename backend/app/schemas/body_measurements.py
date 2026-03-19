@@ -114,12 +114,17 @@ class BodyMeasurementRead(BodyMeasurementBase):
     id: int = Field(
         ..., description="Unique identifier of the body measurement"
     )
+    user_id: int = Field(
+        ...,
+        description="Identifier of the user to whom the measurement belongs",
+    )
 
     model_config = {
         "from_attributes": True,
         "json_schema_extra": {
             "example": {
                 "id": 1,
+                "user_id": 1,
                 "measure_date": "2024-01-01T00:00:00",
                 "height": 175.0,
                 "neck": 40.0,
