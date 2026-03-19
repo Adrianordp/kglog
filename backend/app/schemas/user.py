@@ -5,7 +5,7 @@ Schemas for users in app.models.user.
 from datetime import date, datetime
 from typing import Optional
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, EmailStr, Field
 
 from app.models.user import Gender
 
@@ -16,7 +16,9 @@ class UserBase(BaseModel):
     """
 
     username: str = Field(..., description="Unique username for the user")
-    email: str = Field(..., description="Unique email address for the user")
+    email: EmailStr = Field(
+        ..., description="Unique email address for the user"
+    )
     date_of_birth: date = Field(
         ..., description="Date of birth in YYYY-MM-DD format"
     )
@@ -53,7 +55,7 @@ class UserUpdate(BaseModel):
     username: Optional[str] = Field(
         None, description="Unique username for the user"
     )
-    email: Optional[str] = Field(
+    email: Optional[EmailStr] = Field(
         None, description="Unique email address for the user"
     )
     date_of_birth: Optional[date] = Field(
