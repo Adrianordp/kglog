@@ -1,0 +1,38 @@
+"""
+This model represents a user, including:
+
+- username
+- email
+- password hash
+- date of birth
+- gender
+
+This model is used to store and manage user information
+"""
+
+from datetime import date
+from enum import Enum as PyEnum
+
+from sqlalchemy import Date, Enum, Integer, String
+from sqlalchemy.orm import Mapped, mapped_column
+
+from app.models.base import Base
+
+
+class Gender(PyEnum):
+    MALE = "MALE"
+    FEMALE = "FEMALE"
+    OTHER = "OTHER"
+
+
+class User(Base):
+    __tablename__ = "users"
+
+    id: Mapped[int] = mapped_column(
+        Integer, primary_key=True, autoincrement=True
+    )
+    username: Mapped[str] = mapped_column(String(50), unique=True)
+    email: Mapped[str] = mapped_column(String(100), unique=True)
+    password_hash: Mapped[str] = mapped_column(String(128))
+    date_of_birth: Mapped[date] = mapped_column(Date)
+    gender: Mapped[Gender] = mapped_column(Enum(Gender))
