@@ -22,11 +22,15 @@ useful for tracking fitness and health progress.
 """
 
 from datetime import datetime
+from typing import TYPE_CHECKING
 
 from sqlalchemy import DateTime, Float, ForeignKey, Integer
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.models.base import Base
+
+if TYPE_CHECKING:
+    from app.models.user import User
 
 
 class BodyMeasurements(Base):
@@ -53,3 +57,7 @@ class BodyMeasurements(Base):
     right_leg: Mapped[float] = mapped_column(Float)
     left_calf: Mapped[float] = mapped_column(Float)
     right_calf: Mapped[float] = mapped_column(Float)
+
+    user: Mapped["User"] = relationship(
+        "User", back_populates="body_measurements"
+    )
