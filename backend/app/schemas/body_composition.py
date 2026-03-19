@@ -118,7 +118,7 @@ class BodyCompositionRead(BodyCompositionBase):
         ...,
         description="Calculated water mass in kilograms (weight * water_percentage)",
     )
-    visceral_fat_level: float = Field(
+    visceral_fat: float = Field(
         ...,
         description="Visceral fat level in cm² (calculated based on weight and fat percentage)",
     )
@@ -138,7 +138,7 @@ class BodyCompositionRead(BodyCompositionBase):
                 "bone_kg": 3.5,
                 "water_percentage": 0.60,
                 "water_kg": 42.0,
-                "visceral_fat_level": 100.0,
+                "visceral_fat": 100.0,
             }
         }
     }
