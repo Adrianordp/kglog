@@ -98,6 +98,10 @@ class BodyCompositionRead(BodyCompositionBase):
     id: int = Field(
         ..., description="Unique identifier for the body composition record"
     )
+    user_id: int = Field(
+        ...,
+        description="Identifier of the user to whom the body composition record belongs",
+    )
     fat_kg: float = Field(
         ...,
         description="Calculated fat mass in kilograms (weight * fat_percentage)",
@@ -123,6 +127,7 @@ class BodyCompositionRead(BodyCompositionBase):
         "schema_extra": {
             "example": {
                 "id": 1,
+                "user_id": 1,
                 "measure_date": "2024-01-01T08:00:00",
                 "weight": 70.0,
                 "fat_percentage": 0.15,
