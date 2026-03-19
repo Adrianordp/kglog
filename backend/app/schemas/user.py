@@ -32,7 +32,9 @@ class UserCreate(UserBase):
     Schema for creating a new user.
     """
 
-    password: str = Field(..., description="Password for the user")
+    password: str = Field(
+        ..., description="Password for the user", min_length=6
+    )
 
     model_config = {
         "json_schema_extra": {
@@ -64,7 +66,9 @@ class UserUpdate(BaseModel):
     gender: Optional[Gender] = Field(
         None, description="Gender of the user (e.g., MALE, FEMALE, OTHER)"
     )
-    password: Optional[str] = Field(None, description="Password for the user")
+    password: Optional[str] = Field(
+        None, description="Password for the user", min_length=6
+    )
 
     model_config = {
         "json_schema_extra": {
