@@ -38,7 +38,7 @@ class BodyCompositionCreate(BodyCompositionBase):
     """
 
     model_config = {
-        "schema_extra": {
+        "json_schema_extra": {
             "example": {
                 "measure_date": "2024-01-01T08:00:00",
                 "weight": 70.0,
@@ -77,7 +77,7 @@ class BodyCompositionUpdate(BaseModel):
     )
 
     model_config = {
-        "schema_extra": {
+        "json_schema_extra": {
             "example": {
                 "measure_date": "2024-01-01T08:00:00",
                 "weight": 70.0,
@@ -124,7 +124,7 @@ class BodyCompositionRead(BodyCompositionBase):
     )
 
     model_config = {
-        "schema_extra": {
+        "json_schema_extra": {
             "example": {
                 "id": 1,
                 "id_user": 1,
