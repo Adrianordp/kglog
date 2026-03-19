@@ -21,9 +21,9 @@ This model is used to track the user's body measurements over time, which can be
 useful for tracking fitness and health progress.
 """
 
-from datetime import date
+from datetime import datetime
 
-from sqlalchemy import Date, Float, ForeignKey, Integer
+from sqlalchemy import DateTime, Float, ForeignKey, Integer
 from sqlalchemy.orm import Mapped, mapped_column
 
 from app.models.base import Base
@@ -38,7 +38,7 @@ class BodyMeasurements(Base):
 
     id_user: Mapped[int] = mapped_column(ForeignKey("users.id"))
 
-    measure_date: Mapped[date] = mapped_column(Date)
+    measure_date: Mapped[datetime] = mapped_column(DateTime(timezone=True))
     height: Mapped[float] = mapped_column(Float)
     neck: Mapped[float] = mapped_column(Float)
     neck_to_shoulder: Mapped[float] = mapped_column(Float)
