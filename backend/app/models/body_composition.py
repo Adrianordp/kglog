@@ -26,6 +26,8 @@ from app.models.base import Base
 
 
 class BodyComposition(Base):
+    __tablename__ = "body_compositions"
+
     id: Mapped[int] = mapped_column(
         Integer, primary_key=True, autoincrement=True
     )
