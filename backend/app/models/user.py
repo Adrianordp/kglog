@@ -16,9 +16,11 @@ from datetime import date, datetime, timezone
 from enum import Enum as PyEnum
 
 from sqlalchemy import Date, DateTime, Enum, Integer, String
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.models.base import Base
+from app.models.body_composition import BodyComposition
+from app.models.body_measurements import BodyMeasurements
 
 
 class Gender(PyEnum):
@@ -48,4 +50,8 @@ class User(Base):
         DateTime(timezone=True),
         default=lambda: datetime.now(timezone.utc),
         onupdate=lambda: datetime.now(timezone.utc),
+    )
+
+    body_measurements: Mapped[list["BodyMeasurements"]] = relationship(
+        "BodyMeasurements", back_populates="user", cascade="all, delete-orphan"
     )
