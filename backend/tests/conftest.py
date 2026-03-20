@@ -9,7 +9,6 @@ from app.models.base import Base
 TEST_DATABASE_URL = os.getenv(
     "TEST_DATABASE_URL", "sqlite+aiosqlite:///:memory:"
 )
-_IS_SQLITE = TEST_DATABASE_URL.startswith("sqlite")
 
 
 @pytest_asyncio.fixture(scope="session")
@@ -25,20 +24,7 @@ async def db_engine():
     yield engine
 
     async with engine.begin() as conn:
-        if _IS_SQLITE:
-            await conn.run_sync(Base.metadata.drop_all)
-        else:
-            await conn.execute(
-                __import__("sqlalchemy").text("DROP SCHEMA public CASCADE")
-            )
-            await conn.execute(
-                __import__("sqlalchemy").text("CREATE SCHEMA public")
-            )
-            await conn.execute(
-                __import__("sqlalchemy").text(
-                    "GRANT ALL ON SCHEMA public TO PUBLIC"
-                )
-            )
+        await conn.run_sync(Base.metadata.drop_all)
 
     await engine.dispose()
 
@@ -56,15 +42,5 @@ async def async_session(db_engine):
     async with async_session_factory() as session:
         yield session
     async with db_engine.begin() as conn:
-        if _IS_SQLITE:
-            for table in reversed(Base.metadata.sorted_tables):
-                await conn.execute(table.delete())
-        else:
-            table_names = ", ".join(
-                f'"{t.name}"' for t in reversed(Base.metadata.sorted_tables)
-            )
-            await conn.execute(
-                __import__("sqlalchemy").text(
-                    f"TRUNCATE {table_names} RESTART IDENTITY CASCADE"
-                )
-            )
+        for table in reversed(Base.metadata.sorted_tables):
+            await conn.execute(table.delete())
