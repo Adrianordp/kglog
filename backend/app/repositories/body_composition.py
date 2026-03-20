@@ -195,18 +195,18 @@ async def bone_percentage_formula(
     database.
 
     [1] (https://doi.org/10.1016/j.smhs.2023.09.003)
-    Justin Aflatooni, Steven Martin, Adib Edilbi, Pranav Gadangi,
-    William Singer, Robert Loving, Shreya Domakonda, Nandini Solanki, Patrick
-    C. McCulloch, Bradley Lambert
-
-    A novel non-invasive method for predicting bone mineral density and
-    fracture risk using demographic and anthropometric measures,
-
-    Sports Medicine and Health Science,
-    Volume 5, Issue 4,
-    2023,
-    Pages 308-313,
-    ISSN 2666-3376,
+    > Justin Aflatooni, Steven Martin, Adib Edilbi, Pranav Gadangi,
+    > William Singer, Robert Loving, Shreya Domakonda, Nandini Solanki, Patrick
+    > C. McCulloch, Bradley Lambert
+    >
+    > A novel non-invasive method for predicting bone mineral density and
+    > fracture risk using demographic and anthropometric measures,
+    >
+    > Sports Medicine and Health Science,
+    > Volume 5, Issue 4,
+    > 2023,
+    > Pages 308-313,
+    > ISSN 2666-3376,
 
     Args:
         db: The database session to retrieve data needed for the calculation
