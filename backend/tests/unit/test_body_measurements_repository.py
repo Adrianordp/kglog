@@ -26,6 +26,9 @@ async def test_repo_create_measurements(async_session: AsyncSession):
         right_leg=50.0,
         left_calf=35.0,
         right_calf=35.0,
+        shoulders=50.0,
+        trunk=60.0,
+        pelvis=40.0,
     )
 
     created_measurement = await measurements_repo.create_body_measurement(
@@ -53,6 +56,9 @@ async def test_repo_get_all_measurements(async_session: AsyncSession):
         right_leg=50.0,
         left_calf=35.0,
         right_calf=35.0,
+        shoulders=50.0,
+        trunk=60.0,
+        pelvis=40.0,
     )
     await measurements_repo.create_body_measurement(
         async_session, create_data, id_user=1
@@ -81,6 +87,9 @@ async def test_repo_get_measurements_by_user_id(async_session: AsyncSession):
         right_leg=50.0,
         left_calf=35.0,
         right_calf=35.0,
+        shoulders=50.0,
+        trunk=60.0,
+        pelvis=40.0,
     )
     await measurements_repo.create_body_measurement(
         async_session, create_data, id_user=1
@@ -112,6 +121,9 @@ async def test_repo_update_measurement(async_session: AsyncSession):
         right_leg=50.0,
         left_calf=35.0,
         right_calf=35.0,
+        shoulders=50.0,
+        trunk=60.0,
+        pelvis=40.0,
     )
     created_measurement = await measurements_repo.create_body_measurement(
         async_session, create_data, id_user=1
