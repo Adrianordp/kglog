@@ -51,7 +51,7 @@ class BodyCompositionCreate(BodyCompositionBase):
     visceral_fat: Optional[float] = Field(
         None,
         description="Visceral fat level in cm² (calculated based on weight and fat percentage)",
-        gt=0.0,
+        ge=0.0,
     )
 
     model_config = {
@@ -107,7 +107,7 @@ class BodyCompositionUpdate(BaseModel):
     visceral_fat: Optional[float] = Field(
         None,
         description="Visceral fat level in cm² (calculated based on weight and fat percentage)",
-        gt=0.0,
+        ge=0.0,
     )
 
     model_config = {
