@@ -2,8 +2,6 @@
 Repository for managing body composition in the database.
 """
 
-from math import log10
-
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -80,6 +78,15 @@ async def fat_percentage_formula(
     calculation. In a real implementation, data would be retrieved from the
     database.
 
+    [1](https://doi.org/10.1038/s41598-018-29362-1)
+    > Woolcott, Orison O. and Bergman, Richard N.
+    >
+    > Relative fat mass (RFM) as a new estimator of whole-body fat percentage ─
+    > A cross-sectional study in American adult individuals
+    >
+    > Scientific Reports
+    > 2018
+
     Args:
         db: The database session to retrieve data needed for the calculation
         id_user: The ID of the user to retrieve measurements for
@@ -90,37 +97,30 @@ async def fat_percentage_formula(
 
     # Mock user and measurement data for the calculation
     class MockMeasurement:
-        def __init__(
-            self, height: float, waist: float, hip: float, neck: float
-        ):
-            self.height = height
-            self.waist = waist
-            self.hip = hip
-            self.neck = neck
+        def __init__(self):
+            self.height = 170
+            self.waist = 80
+            self.hip = 100
+            self.neck = 40
 
     class MockUser:
-        def __init__(self, id: int, gender: str):
+        def __init__(self, id: int):
             self.id = id
-            self.gender = gender
+            self.gender = "MALE"
+            self.age = 30
 
-    msmnt = MockMeasurement(170, 80, 100, 40)
-    user = MockUser(id_user, "MALE")
+    msmnt = MockMeasurement()
+    user = MockUser(id_user)
 
     if user.gender not in ["MALE", "FEMALE"]:
         raise ValueError("Gender must be 'MALE' or 'FEMALE' for estimation.")
 
-    log10height = log10(msmnt.height)
-
     if user.gender == "MALE":
-        log10waistneck = log10(msmnt.waist - msmnt.neck)
-        fat_percentage = 86.010 * log10waistneck - 70.041 * log10height + 36.76
+        bf_woolcott = 76 - 20 * (msmnt.height / msmnt.waist)
     else:
-        log10waisthipneck = log10(msmnt.waist + msmnt.hip - msmnt.neck)
-        fat_percentage = (
-            163.205 * log10waisthipneck - 97.684 * log10height - 78.387
-        )
+        bf_woolcott = 64 - 20 * (msmnt.height / msmnt.waist)
 
-    return max(min(fat_percentage, 1.0), 0.0)
+    return max(min(bf_woolcott, 1.0), 0.0)
 
 
 async def water_percentage_formula(
