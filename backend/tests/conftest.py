@@ -17,9 +17,6 @@ async def db_engine():
     """Session-scoped engine. Uses PostgreSQL when TEST_DATABASE_URL is set, SQLite otherwise."""
     kwargs = {"echo": False, "future": True}
 
-    if _IS_SQLITE:
-        kwargs["connect_args"] = {"check_same_thread": False}
-
     engine = create_async_engine(TEST_DATABASE_URL, **kwargs)
 
     async with engine.begin() as conn:
