@@ -48,8 +48,9 @@ async def viceral_fat_formula(
 
     if user.gender not in ["MALE", "FEMALE"]:
         raise ValueError(
-            "User gender must be either 'MALE' or 'FEMALE' for visceral fat"
-            "calculation"
+            "User gender must be either 'MALE' or 'FEMALE' for visceral fat "
+            "estimation. Please provide true values of body composition to "
+            "avoid estimation."
         )
 
     bmi = weight / (msmnt.height / 100) ** 2
