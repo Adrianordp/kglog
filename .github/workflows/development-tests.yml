@@ -7,7 +7,7 @@ on:
     branches: [main, develop]
 
 jobs:
-  static-analysis:
+  development-tests:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
