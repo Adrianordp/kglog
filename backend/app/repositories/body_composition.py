@@ -128,6 +128,59 @@ async def fat_percentage_formula(
     return max(min(fat_percentage, 1.0), 0.0)
 
 
+async def water_percentage_formula(
+    db: AsyncSession, id_user: int, weight: float
+) -> float:
+    """
+    Calculate water percentage based on Watson formula.
+
+    This implementation mocks the necessary user and measurement data for the
+    calculation. In a real implementation, data would be retrieved from the
+    database.
+
+    Args:
+        db: The database session to retrieve data needed for the calculation
+        id_user: The ID of the user to retrieve measurements for
+        weight: The weight of the user to calculate water percentage for
+    Returns:
+        The calculated water percentage as a decimal (e.g., 0.60 for 60%)
+    """
+
+    # Mock user and measurement data for the calculation
+    class MockMeasurement:
+        def __init__(
+            self, height: float, waist: float, hip: float, neck: float
+        ):
+            self.height = height
+            self.waist = waist
+            self.hip = hip
+            self.neck = neck
+
+    class MockUser:
+        def __init__(self, id: int, gender: str, age: int):
+            self.id = id
+            self.gender = gender
+            self.age = age
+
+    mst = MockMeasurement(170, 80, 100, 40)
+    usr = MockUser(id_user, "MALE", 30)
+
+    if usr.gender not in ["MALE", "FEMALE"]:
+        raise ValueError(
+            "User gender must be either 'MALE' or 'FEMALE' for water "
+            "percentage estimation"
+        )
+
+    if usr.gender == "MALE":
+        lit = 2.447 - 0.09156 * usr.age + 0.1074 * mst.height + 0.3362 * weight
+    else:
+        lit = -2.097 + 0.1069 * mst.height + 0.2466 * weight
+
+    water_perc = lit / weight
+
+    return max(min(water_perc, 1.0), 0.0)
+
+
 async def get_body_compositions(db: AsyncSession) -> list[BodyCompositionRead]:
     """
     Get all body compositions.
@@ -167,6 +220,12 @@ async def create_body_composition(
     # Estimate fat mass if not provided
     if body_composition.fat_percentage is None:
         body_composition.fat_percentage = await fat_percentage_formula(
+            db, id_user, body_composition.weight
+        )
+
+    # Estimate water percentage if not provided
+    if body_composition.water_percentage is None:
+        body_composition.water_percentage = await water_percentage_formula(
             db, id_user, body_composition.weight
         )
 
