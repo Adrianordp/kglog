@@ -107,10 +107,7 @@ async def fat_percentage_formula(
     user = MockUser(id_user, "MALE")
 
     if user.gender not in ["MALE", "FEMALE"]:
-        raise ValueError(
-            "User gender must be either 'MALE' or 'FEMALE' for fat percentage "
-            "estimation"
-        )
+        raise ValueError("Gender must be 'MALE' or 'FEMALE' for estimation.")
 
     log10height = log10(msmnt.height)
 
@@ -164,10 +161,7 @@ async def water_percentage_formula(
     usr = MockUser(id_user, "MALE", 30)
 
     if usr.gender not in ["MALE", "FEMALE"]:
-        raise ValueError(
-            "User gender must be either 'MALE' or 'FEMALE' for water "
-            "percentage estimation"
-        )
+        raise ValueError("Gender must be 'MALE' or 'FEMALE' for estimation.")
 
     if usr.gender == "MALE":
         lit = 2.447 - 0.09156 * usr.age + 0.1074 * mst.height + 0.3362 * weight
@@ -241,6 +235,9 @@ async def bone_percentage_formula(
 
     msmnt = MockMeasurement(170, 40, 50, 30)
     user = MockUser(id_user, "MALE", 30)
+
+    if user.gender not in ["MALE", "FEMALE"]:
+        raise ValueError("Gender must be 'MALE' or 'FEMALE' for estimation.")
 
     # general_estimation = 0.128 * msmnt.height + 0.245 * weight - 2.95
     # lean_mass = weight * (1 - body_fat_percentage)
@@ -318,6 +315,9 @@ async def muscle_percentage_formula(
 
     msmnt = MockMeasurement()
     user = MockUser(id_user)
+
+    if user.gender not in ["MALE", "FEMALE"]:
+        raise ValueError("Gender must be 'MALE' or 'FEMALE' for estimation.")
 
     poortmans_asm_kg = (
         msmnt.height
