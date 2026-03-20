@@ -8,40 +8,37 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.models.body_measurements import BodyMeasurements
 from app.schemas.body_measurements import (
     BodyMeasurementCreate,
-    BodyMeasurementRead,
     BodyMeasurementUpdate,
 )
 
 
-async def get_body_measurements(db: AsyncSession) -> list[BodyMeasurementRead]:
+async def get_body_measurements(db: AsyncSession) -> list[BodyMeasurements]:
     """
     Get all body measurements.
     """
     stmt = select(BodyMeasurements)
-    query_result = await db.execute(stmt)
-    query_list = query_result.scalars().all()
-    result = [BodyMeasurementRead.model_validate(bm) for bm in query_list]
+    query = await db.execute(stmt)
+    result = query.scalars().all()
 
     return result
 
 
 async def get_body_measurement_by_user_id(
     db: AsyncSession, id_user: int
-) -> list[BodyMeasurementRead]:
+) -> list[BodyMeasurements]:
     """
     Get body measurements by user ID.
     """
     stmt = select(BodyMeasurements).where(BodyMeasurements.id_user == id_user)
-    query_result = await db.execute(stmt)
-    query_list = query_result.scalars().all()
-    result = [BodyMeasurementRead.model_validate(bm) for bm in query_list]
+    query = await db.execute(stmt)
+    result = query.scalars().all()
 
     return result
 
 
 async def create_body_measurement(
     db: AsyncSession, body_measurement: BodyMeasurementCreate, id_user: int
-) -> BodyMeasurementRead:
+) -> BodyMeasurements:
     """
     Create a new body measurement.
     """
@@ -53,12 +50,12 @@ async def create_body_measurement(
     await db.commit()
     await db.refresh(new_body_measurement)
 
-    return BodyMeasurementRead.model_validate(new_body_measurement)
+    return new_body_measurement
 
 
 async def update_body_measurement(
     db: AsyncSession, id: int, body_measurement: BodyMeasurementUpdate
-) -> BodyMeasurementRead:
+) -> BodyMeasurements:
     """
     Update an existing body measurement.
     """
@@ -75,4 +72,4 @@ async def update_body_measurement(
     await db.commit()
     await db.refresh(query_element)
 
-    return BodyMeasurementRead.model_validate(query_element)
+    return query_element
