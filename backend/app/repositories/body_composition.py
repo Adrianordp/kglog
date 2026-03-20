@@ -22,12 +22,11 @@ async def viceral_fat_formula(
     Calculate visceral fat based on weight and fat percentage.
 
     This implementation mocks the necessary user and measurement data for the
-    calculation. In a real implementation, you would retrieve this data from the
+    calculation. In a real implementation, data would be retrieved from the
     database.
 
     Args:
-        db: The database session to retrieve user data if needed for the
-        calculation
+        db: The database session to retrieve data needed for the calculation
         id_user: The ID of the user to retrieve measurements for
         weight: The weight of the user to calculate visceral fat for
     Returns:
@@ -80,12 +79,11 @@ async def fat_percentage_formula(
     Calculate fat percentage based on weight and other measurements.
 
     This implementation mocks the necessary user and measurement data for the
-    calculation. In a real implementation, you would retrieve this data from the
+    calculation. In a real implementation, data would be retrieved from the
     database.
 
     Args:
-        db: The database session to retrieve user data if needed for the
-        calculation
+        db: The database session to retrieve data needed for the calculation
         id_user: The ID of the user to retrieve measurements for
         weight: The weight of the user to calculate fat percentage for
     Returns:
@@ -112,7 +110,7 @@ async def fat_percentage_formula(
 
     if user.gender not in ["MALE", "FEMALE"]:
         raise ValueError(
-            "User gender must be either 'MALE' or 'FEMALE' for fat percentage"
+            "User gender must be either 'MALE' or 'FEMALE' for fat percentage "
             "estimation"
         )
 
