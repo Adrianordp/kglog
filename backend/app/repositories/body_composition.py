@@ -91,7 +91,9 @@ async def update_body_composition(
     if query_element is None:
         raise ValueError(f"Body composition with ID {id} not found")
 
-    for key, value in body_composition.model_dump(exclude_unset=True).items():
+    for key, value in body_composition.model_dump(
+        exclude_unset=True, exclude_none=True
+    ).items():
         setattr(query_element, key, value)
 
     await db.commit()
