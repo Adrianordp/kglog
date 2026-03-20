@@ -249,7 +249,7 @@ async def bone_percentage_formula(
     if user.gender not in ["MALE", "FEMALE"]:
         raise ValueError("Gender must be 'MALE' or 'FEMALE' for estimation.")
 
-    bmc_kg = (
+    bmc_kg_aflatooni = (
         0.0158 * msmnt.height
         - 0.0024 * user.age
         + 0.1712 * (user.gender == "MALE")
@@ -261,7 +261,7 @@ async def bone_percentage_formula(
         - 0.507
     )
 
-    bone_perc = bmc_kg / weight
+    bone_perc = bmc_kg_aflatooni / weight
 
     return max(min(bone_perc, 1.0), 0.0)
 
