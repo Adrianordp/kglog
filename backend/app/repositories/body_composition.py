@@ -249,17 +249,6 @@ async def bone_percentage_formula(
     if user.gender not in ["MALE", "FEMALE"]:
         raise ValueError("Gender must be 'MALE' or 'FEMALE' for estimation.")
 
-    # general_estimation = 0.128 * msmnt.height + 0.245 * weight - 2.95
-    # lean_mass = weight * (1 - body_fat_percentage)
-    # estimation_by_lean_mass = 0.05 * lean_mass
-
-    # if user.gender == "MALE":
-    #     estimation_by_gender_1 = 0.055 * weight
-    #     estimation_by_gender_2 = 0.0025 * weight * msmnt.height
-    # else:
-    #     estimation_by_gender_1 = 0.045 * weight
-    #     estimation_by_gender_2 = 0.0022 * weight * msmnt.height
-
     bmc_kg = (
         0.0158 * msmnt.height
         - 0.0024 * user.age
@@ -375,25 +364,21 @@ async def create_body_composition(
     """
     Create a new body composition.
     """
-    # Estimate visceral fat if not provided
     if body_composition.visceral_fat is None:
         body_composition.visceral_fat = await viceral_fat_formula(
             db, id_user, body_composition.weight
         )
 
-    # Estimate fat mass if not provided
     if body_composition.fat_percentage is None:
         body_composition.fat_percentage = await fat_percentage_formula(
             db, id_user, body_composition.weight
         )
 
-    # Estimate water percentage if not provided
     if body_composition.water_percentage is None:
         body_composition.water_percentage = await water_percentage_formula(
             db, id_user, body_composition.weight
         )
 
-    # Estimate bone mass percentage if not provided
     if body_composition.bone_percentage is None:
         body_composition.bone_percentage = await bone_percentage_formula(
             db,
@@ -402,13 +387,11 @@ async def create_body_composition(
             body_composition.fat_percentage,
         )
 
-    # Estimate muscle mass percentage if not provided
     if body_composition.muscle_percentage is None:
         body_composition.muscle_percentage = await muscle_percentage_formula(
             db, id_user, body_composition.weight
         )
 
-    # Fill the kg data based on the percentage data
     kg_data = {}
     kg_data["fat_kg"] = (
         body_composition.weight * body_composition.fat_percentage
