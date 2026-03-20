@@ -24,6 +24,9 @@ def test_body_measurement_create():
         "right_leg": 50.0,
         "left_calf": 35.0,
         "right_calf": 35.0,
+        "shoulders": 50.0,
+        "trunk": 60.0,
+        "pelvis": 40.0,
     }
 
     body_measurement_create = BodyMeasurementCreate(**data)
@@ -45,6 +48,9 @@ def test_body_measurement_create():
     assert body_measurement_create.right_leg == data["right_leg"]
     assert body_measurement_create.left_calf == data["left_calf"]
     assert body_measurement_create.right_calf == data["right_calf"]
+    assert body_measurement_create.shoulders == data["shoulders"]
+    assert body_measurement_create.trunk == data["trunk"]
+    assert body_measurement_create.pelvis == data["pelvis"]
 
 
 def test_body_measurement_read():
@@ -66,6 +72,9 @@ def test_body_measurement_read():
         "right_leg": 50.0,
         "left_calf": 35.0,
         "right_calf": 35.0,
+        "shoulders": 50.0,
+        "trunk": 60.0,
+        "pelvis": 40.0,
     }
 
     body_measurement_read = BodyMeasurementRead(**data)
@@ -89,6 +98,9 @@ def test_body_measurement_read():
     assert body_measurement_read.right_leg == data["right_leg"]
     assert body_measurement_read.left_calf == data["left_calf"]
     assert body_measurement_read.right_calf == data["right_calf"]
+    assert body_measurement_read.shoulders == data["shoulders"]
+    assert body_measurement_read.trunk == data["trunk"]
+    assert body_measurement_read.pelvis == data["pelvis"]
 
 
 def test_body_measurement_update():
@@ -108,6 +120,9 @@ def test_body_measurement_update():
         "right_leg": 51.0,
         "left_calf": 36.0,
         "right_calf": 36.0,
+        "shoulders": 51.0,
+        "trunk": 61.0,
+        "pelvis": 41.0,
     }
 
     body_measurement_update = BodyMeasurementUpdate(**data)
@@ -129,6 +144,9 @@ def test_body_measurement_update():
     assert body_measurement_update.right_leg == data["right_leg"]
     assert body_measurement_update.left_calf == data["left_calf"]
     assert body_measurement_update.right_calf == data["right_calf"]
+    assert body_measurement_update.shoulders == data["shoulders"]
+    assert body_measurement_update.trunk == data["trunk"]
+    assert body_measurement_update.pelvis == data["pelvis"]
 
 
 def test_body_measurement_create_invalid_measure_date():
@@ -148,6 +166,9 @@ def test_body_measurement_create_invalid_measure_date():
         "right_leg": 50.0,
         "left_calf": 35.0,
         "right_calf": 35.0,
+        "shoulders": 50.0,
+        "trunk": 60.0,
+        "pelvis": 40.0,
     }
 
     try:
@@ -186,13 +207,16 @@ def test_body_measurement_create_invalid_height():
         "right_leg": -50.0,
         "left_calf": -35.0,
         "right_calf": -35.0,
+        "shoulders": -50.0,
+        "trunk": -60.0,
+        "pelvis": -40.0,
     }
 
     try:
         BodyMeasurementCreate(**data)
         assert False, "Expected ValueError for invalid height"
     except ValueError as e:
-        assert str(e).count("Input should be greater than 0") == 14
+        assert str(e).count("Input should be greater than 0") == 17
 
 
 def test_body_measurement_update_invalid_height():
@@ -211,10 +235,13 @@ def test_body_measurement_update_invalid_height():
         "right_leg": -50.0,
         "left_calf": -35.0,
         "right_calf": -35.0,
+        "shoulders": -50.0,
+        "trunk": -60.0,
+        "pelvis": -40.0,
     }
 
     try:
         BodyMeasurementUpdate(**data)
         assert False, "Expected ValueError for invalid height"
     except ValueError as e:
-        assert str(e).count("Input should be greater than 0") == 14
+        assert str(e).count("Input should be greater than 0") == 17
