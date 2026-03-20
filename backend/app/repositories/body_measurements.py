@@ -63,16 +63,16 @@ async def update_body_measurement(
     Update an existing body measurement.
     """
     stmt = select(BodyMeasurements).where(BodyMeasurements.id == id)
-    query = await db.execute(stmt)
-    existing_body_measurement = query.scalar_one_or_none()
+    query_result = await db.execute(stmt)
+    query_element = query_result.scalar_one_or_none()
 
-    if not existing_body_measurement:
+    if not query_element:
         raise ValueError(f"Body measurement with id {id} not found")
 
     for key, value in body_measurement.model_dump(exclude_unset=True).items():
-        setattr(existing_body_measurement, key, value)
+        setattr(query_element, key, value)
 
     await db.commit()
-    await db.refresh(existing_body_measurement)
+    await db.refresh(query_element)
 
-    return BodyMeasurementRead.model_validate(existing_body_measurement)
+    return BodyMeasurementRead.model_validate(query_element)
