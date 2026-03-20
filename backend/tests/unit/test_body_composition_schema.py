@@ -15,6 +15,7 @@ def test_body_composition_create():
         "muscle_percentage": 0.40,
         "bone_percentage": 0.05,
         "water_percentage": 0.60,
+        "visceral_fat": 100.0,
     }
 
     body_composition_create = BodyCompositionCreate(**data)
@@ -29,6 +30,7 @@ def test_body_composition_create():
     )
     assert body_composition_create.bone_percentage == data["bone_percentage"]
     assert body_composition_create.water_percentage == data["water_percentage"]
+    assert body_composition_create.visceral_fat == data["visceral_fat"]
 
 
 def test_body_composition_read():
@@ -75,6 +77,7 @@ def test_body_composition_update():
         "muscle_percentage": 0.41,
         "bone_percentage": 0.06,
         "water_percentage": 0.61,
+        "visceral_fat": 9.0,
     }
 
     body_composition_update = BodyCompositionUpdate(**data)
@@ -89,6 +92,7 @@ def test_body_composition_update():
     )
     assert body_composition_update.bone_percentage == data["bone_percentage"]
     assert body_composition_update.water_percentage == data["water_percentage"]
+    assert body_composition_update.visceral_fat == data["visceral_fat"]
 
 
 def test_body_composition_create_invalid_measure_date():
@@ -99,6 +103,7 @@ def test_body_composition_create_invalid_measure_date():
         "muscle_percentage": 0.40,
         "bone_percentage": 0.05,
         "water_percentage": 0.60,
+        "visceral_fat": 100.0,
     }
 
     try:
@@ -128,6 +133,7 @@ def test_body_composition_create_invalid_high_percentage():
         "muscle_percentage": 1,  # Invalid percentage
         "bone_percentage": 1,  # Invalid percentage
         "water_percentage": 1,  # Invalid percentage
+        "visceral_fat": 100.0,
     }
 
     try:
@@ -160,6 +166,7 @@ def test_body_composition_create_invalid_low_percentage():
         "muscle_percentage": 0,  # Invalid percentage
         "bone_percentage": 0,  # Invalid percentage
         "water_percentage": 0,  # Invalid percentage
+        "visceral_fat": 100.0,
     }
 
     try:
@@ -192,6 +199,7 @@ def test_body_composition_create_invalid_weight():
         "muscle_percentage": 0.40,
         "bone_percentage": 0.05,
         "water_percentage": 0.60,
+        "visceral_fat": 100.0,
     }
 
     try:
@@ -211,3 +219,33 @@ def test_body_composition_update_invalid_weight():
         assert False, "Expected ValueError for invalid weight"
     except ValueError as e:
         assert "Input should be greater than 0" in str(e)
+
+
+def test_body_composition_create_invalid_visceral_fat():
+    data = {
+        "measure_date": "2024-01-01T00:00:00+00:00",
+        "weight": 70.0,
+        "fat_percentage": 0.15,
+        "muscle_percentage": 0.40,
+        "bone_percentage": 0.05,
+        "water_percentage": 0.60,
+        "visceral_fat": -0.001,  # Invalid visceral fat
+    }
+
+    try:
+        BodyCompositionCreate(**data)
+        assert False, "Expected ValueError for invalid visceral_fat"
+    except ValueError as e:
+        assert "Input should be greater than or equal to 0" in str(e)
+
+
+def test_body_composition_update_invalid_visceral_fat():
+    data = {
+        "visceral_fat": -0.001,  # Invalid visceral fat
+    }
+
+    try:
+        BodyCompositionUpdate(**data)
+        assert False, "Expected ValueError for invalid visceral_fat"
+    except ValueError as e:
+        assert "Input should be greater than or equal to 0" in str(e)
