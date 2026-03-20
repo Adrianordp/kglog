@@ -181,6 +181,97 @@ async def water_percentage_formula(
     return max(min(water_perc, 1.0), 0.0)
 
 
+async def bone_percentage_formula(
+    db: AsyncSession,
+    id_user: int,
+    weight: float,
+    body_fat_percentage: float = 0.15,
+) -> float:
+    """
+    Calculate[1] bone mineral compositon percentage.
+
+    This implementation mocks the necessary user and measurement data for the
+    calculation. In a real implementation, data would be retrieved from the
+    database.
+
+    [1] (https://doi.org/10.1016/j.smhs.2023.09.003)
+    Justin Aflatooni, Steven Martin, Adib Edilbi, Pranav Gadangi,
+    William Singer, Robert Loving, Shreya Domakonda, Nandini Solanki, Patrick
+    C. McCulloch, Bradley Lambert
+
+    A novel non-invasive method for predicting bone mineral density and
+    fracture risk using demographic and anthropometric measures,
+
+    Sports Medicine and Health Science,
+    Volume 5, Issue 4,
+    2023,
+    Pages 308-313,
+    ISSN 2666-3376,
+
+    Args:
+        db: The database session to retrieve data needed for the calculation
+        id_user: The ID of the user to retrieve measurements for
+        weight: The weight of the user to calculate bone percentage for
+        body_fat_percentage: The body fat percentage of the user
+    Returns:
+        The calculated bone mass percentage as a decimal (e.g., 0.05 for 5%)
+    """
+
+    # Mock user and measurement data for the calculation
+    class MockMeasurement:
+        def __init__(
+            self,
+            height: float,
+            shoulder_width: float,
+            trunk_length: float,
+            pelvis_width: float,
+        ):
+            self.height = height
+            # measured between the widest point of each shoulder
+            self.shoulder_width = shoulder_width
+            # measured from the top of the widest point on the pelvis (iliac
+            # crest) to the vertical level of the bottom of the jaw bone
+            self.trunk_length = trunk_length
+            # measured between the iliac spines of the pelvis
+            self.pelvis_width = pelvis_width
+
+    class MockUser:
+        def __init__(self, id: int, gender: str, age: int):
+            self.id = id
+            self.gender = gender
+            self.age = age
+
+    msmnt = MockMeasurement(170, 40, 50, 30)
+    user = MockUser(id_user, "MALE", 30)
+
+    # general_estimation = 0.128 * msmnt.height + 0.245 * weight - 2.95
+    # lean_mass = weight * (1 - body_fat_percentage)
+    # estimation_by_lean_mass = 0.05 * lean_mass
+
+    # if user.gender == "MALE":
+    #     estimation_by_gender_1 = 0.055 * weight
+    #     estimation_by_gender_2 = 0.0025 * weight * msmnt.height
+    # else:
+    #     estimation_by_gender_1 = 0.045 * weight
+    #     estimation_by_gender_2 = 0.0022 * weight * msmnt.height
+
+    bmc_kg = (
+        0.0158 * msmnt.height
+        - 0.0024 * user.age
+        + 0.1712 * (user.gender == "MALE")
+        + 0.0314 * weight * (1 - body_fat_percentage)
+        + 0.001 * weight * body_fat_percentage
+        + 0.0089 * msmnt.shoulder_width
+        - 0.0145 * msmnt.trunk_length
+        - 0.0278 * msmnt.pelvis_width
+        - 0.507
+    )
+
+    bone_perc = bmc_kg / weight
+
+    return max(min(bone_perc, 1.0), 0.0)
+
+
 async def get_body_compositions(db: AsyncSession) -> list[BodyCompositionRead]:
     """
     Get all body compositions.
@@ -227,6 +318,15 @@ async def create_body_composition(
     if body_composition.water_percentage is None:
         body_composition.water_percentage = await water_percentage_formula(
             db, id_user, body_composition.weight
+        )
+
+    # Estimate bone mass percentage if not provided
+    if body_composition.bone_percentage is None:
+        body_composition.bone_percentage = await bone_percentage_formula(
+            db,
+            id_user,
+            body_composition.weight,
+            body_composition.fat_percentage,
         )
 
     # Fill the kg data based on the percentage data
