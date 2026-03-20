@@ -133,6 +133,14 @@ async def water_percentage_formula(
     calculation. In a real implementation, data would be retrieved from the
     database.
 
+    > [1](https://doi.org/10.1093/ajcn/33.1.27)
+    > Watson PE, Watson ID, Batt RD
+    >
+    > Total body water volumes for adult males and females estimated from simple anthropometric measurements.
+    >
+    > Am J Clin Nutrition
+    > 1980
+
     Args:
         db: The database session to retrieve data needed for the calculation
         id_user: The ID of the user to retrieve measurements for
@@ -164,11 +172,13 @@ async def water_percentage_formula(
         raise ValueError("Gender must be 'MALE' or 'FEMALE' for estimation.")
 
     if usr.gender == "MALE":
-        lit = 2.447 - 0.09156 * usr.age + 0.1074 * mst.height + 0.3362 * weight
+        water_watson = (
+            2.447 - 0.09156 * usr.age + 0.1074 * mst.height + 0.3362 * weight
+        )
     else:
-        lit = -2.097 + 0.1069 * mst.height + 0.2466 * weight
+        water_watson = -2.097 + 0.1069 * mst.height + 0.2466 * weight
 
-    water_perc = lit / weight
+    water_perc = water_watson / weight
 
     return max(min(water_perc, 1.0), 0.0)
 
