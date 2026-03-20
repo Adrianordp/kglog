@@ -13,6 +13,63 @@ from app.schemas.body_composition import (
 )
 
 
+async def viceral_fat_formula(
+    db: AsyncSession, id_user: int, body_comp: BodyCompositionCreate
+) -> float:
+    """
+    Calculate visceral fat based on weight and fat percentage.
+
+    This implementation mocks the necessary user and measurement data for the
+    calculation. In a real implementation, you would retrieve this data from the
+    database.
+
+    Args:
+        db: The database session to retrieve user data if needed for the
+        calculation
+        id_user: The ID of the user to retrieve measurements for
+        body_comp: The body composition data to calculate visceral fat for
+    Returns:
+        The calculated visceral fat level in cm²
+    """
+
+    class MockMeasurement:
+        def __init__(self, height: float, waist: float, hip: float):
+            self.height = height
+            self.waist = waist
+            self.hip = hip
+
+    class MockUser:
+        def __init__(self, id: int, gender: str):
+            self.id = id
+            self.gender = gender
+
+    msmnt = MockMeasurement(170, 80, 100)
+    user = MockUser(id_user, "MALE")
+
+    if user.gender not in ["MALE", "FEMALE"]:
+        raise ValueError(
+            "User gender must be either 'MALE' or 'FEMALE' for visceral fat"
+            "calculation"
+        )
+
+    bmi = body_comp.weight / (msmnt.height / 100) ** 2
+    whtr = msmnt.waist / msmnt.height
+    whr = msmnt.waist / msmnt.hip
+
+    if user.gender == "MALE":
+        vfa = 2.5 * msmnt.waist + 120 * whtr + 80 * whr + 8 * bmi - 300
+    else:
+        vfa = 2 * msmnt.waist + 100 * whtr + 60 * whr + 6 * bmi - 250
+
+    # limb_factor = (
+    #     msmnt.left_leg + msmnt.right_leg + msmnt.left_arm + msmnt.right_arm
+    # ) / (4 * msmnt.waist)
+
+    # vfa = 180 * whtr + 40 * whr + 4 * bmi - 120 * limb_factor
+
+    return max(vfa, 0)
+
+
 async def get_body_compositions(db: AsyncSession) -> list[BodyCompositionRead]:
     """
     Get all body compositions.
@@ -43,6 +100,12 @@ async def create_body_composition(
     """
     Create a new body composition.
     """
+    # Estimate visceral fat if not provided
+    if body_composition.visceral_fat is None:
+        body_composition.visceral_fat = await viceral_fat_formula(
+            db, id_user, body_composition
+        )
+
     # Fill the kg data based on the percentage data
     kg_data = {}
     kg_data["fat_kg"] = (
@@ -58,17 +121,10 @@ async def create_body_composition(
         body_composition.weight * body_composition.water_percentage
     )
 
-    # Calculate visceral fat based on weight and fat percentage (this is a simplified formula for demonstration purposes)
-    # This is a placeholder formula and should be replaced with a more
-    visceral_fat = (
-        body_composition.weight * body_composition.fat_percentage * 0.1
-    )
-
     new_body_composition = BodyComposition(
         id_user=id_user,
         **body_composition.model_dump(),
         **kg_data,
-        visceral_fat=visceral_fat,
     )
     print(new_body_composition.__dict__)
     db.add(new_body_composition)
