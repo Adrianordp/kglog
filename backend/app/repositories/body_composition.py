@@ -19,57 +19,55 @@ async def viceral_fat_formula(
     db: AsyncSession, id_user: int, weight: float
 ) -> float:
     """
-    Calculate visceral fat based on weight and fat percentage.
+    Calculate visceral fat area (VFA).
 
     This implementation mocks the necessary user and measurement data for the
     calculation. In a real implementation, data would be retrieved from the
     database.
+
+    [1](https://doi.org/10.3389/fendo.2022.916124)
+    > Liu H, Yang D, Li S, Xiao Y, Tu Y, Peng D, Bao Y, Han J and Yu H
+    > A Reliable Estimate of Visceral Fat Area From Simple Anthropometric
+    > Measurements in Chinese Overweight and Obese Individuals.
+    >
+    > Front.
+    > Endocrinol.
+    > 13:916124.
+    > 2022
 
     Args:
         db: The database session to retrieve data needed for the calculation
         id_user: The ID of the user to retrieve measurements for
         weight: The weight of the user to calculate visceral fat for
     Returns:
-        The calculated visceral fat level in cm²
+        The calculated visceral fat area (VFA) in cm²
     """
 
     class MockMeasurement:
-        def __init__(self, height: float, waist: float, hip: float):
-            self.height = height
-            self.waist = waist
-            self.hip = hip
+        def __init__(self):
+            self.height = 170
+            self.waist = 80
+            self.hip = 100
+            self.neck = 40
 
     class MockUser:
-        def __init__(self, id: int, gender: str):
+        def __init__(self, id: int):
             self.id = id
-            self.gender = gender
+            self.gender = "MALE"
+            self.age = 30
 
-    msmnt = MockMeasurement(170, 80, 100)
-    user = MockUser(id_user, "MALE")
+    msmnt = MockMeasurement()
+    user = MockUser(id_user)
 
     if user.gender not in ["MALE", "FEMALE"]:
-        raise ValueError(
-            "User gender must be either 'MALE' or 'FEMALE' for visceral fat "
-            "estimation. Please provide true values of body composition to "
-            "avoid estimation."
-        )
-
-    bmi = weight / (msmnt.height / 100) ** 2
-    whtr = msmnt.waist / msmnt.height
-    whr = msmnt.waist / msmnt.hip
+        raise ValueError("Gender must be 'MALE' or 'FEMALE' for estimation.")
 
     if user.gender == "MALE":
-        vfa = 2.5 * msmnt.waist + 120 * whtr + 80 * whr + 8 * bmi - 300
+        vfa_liu = 3.7 * user.age + 2.4 * msmnt.waist + 5.5 * msmnt.neck - 443.6
     else:
-        vfa = 2 * msmnt.waist + 100 * whtr + 60 * whr + 6 * bmi - 250
+        vfa_liu = 2.8 * user.age + 1.7 * msmnt.waist + 6.5 * msmnt.neck - 367.3
 
-    # limb_factor = (
-    #     msmnt.left_leg + msmnt.right_leg + msmnt.left_arm + msmnt.right_arm
-    # ) / (4 * msmnt.waist)
-
-    # vfa = 180 * whtr + 40 * whr + 4 * bmi - 120 * limb_factor
-
-    return max(vfa, 0)
+    return max(vfa_liu, 0)
 
 
 async def fat_percentage_formula(
