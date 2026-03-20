@@ -14,7 +14,7 @@ from app.schemas.body_composition import (
 
 
 async def viceral_fat_formula(
-    db: AsyncSession, id_user: int, body_comp: BodyCompositionCreate
+    db: AsyncSession, id_user: int, weight: float
 ) -> float:
     """
     Calculate visceral fat based on weight and fat percentage.
@@ -27,7 +27,7 @@ async def viceral_fat_formula(
         db: The database session to retrieve user data if needed for the
         calculation
         id_user: The ID of the user to retrieve measurements for
-        body_comp: The body composition data to calculate visceral fat for
+        weight: The weight of the user to calculate visceral fat for
     Returns:
         The calculated visceral fat level in cm²
     """
@@ -52,7 +52,7 @@ async def viceral_fat_formula(
             "calculation"
         )
 
-    bmi = body_comp.weight / (msmnt.height / 100) ** 2
+    bmi = weight / (msmnt.height / 100) ** 2
     whtr = msmnt.waist / msmnt.height
     whr = msmnt.waist / msmnt.hip
 
@@ -103,7 +103,7 @@ async def create_body_composition(
     # Estimate visceral fat if not provided
     if body_composition.visceral_fat is None:
         body_composition.visceral_fat = await viceral_fat_formula(
-            db, id_user, body_composition
+            db, id_user, body_composition.weight
         )
 
     # Fill the kg data based on the percentage data
