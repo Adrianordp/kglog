@@ -229,13 +229,9 @@ async def bone_percentage_formula(
             pelvis_width: float,
         ):
             self.height = height
-            # measured between the widest point of each shoulder
-            self.shoulder_width = shoulder_width
-            # measured from the top of the widest point on the pelvis (iliac
-            # crest) to the vertical level of the bottom of the jaw bone
-            self.trunk_length = trunk_length
-            # measured between the iliac spines of the pelvis
-            self.pelvis_width = pelvis_width
+            self.shoulders = shoulder_width
+            self.trunk = trunk_length
+            self.pelvis = pelvis_width
 
     class MockUser:
         def __init__(self, id: int, gender: str, age: int):
@@ -255,9 +251,9 @@ async def bone_percentage_formula(
         + 0.1712 * (user.gender == "MALE")
         + 0.0314 * weight * (1 - body_fat_percentage)
         + 0.001 * weight * body_fat_percentage
-        + 0.0089 * msmnt.shoulder_width
-        - 0.0145 * msmnt.trunk_length
-        - 0.0278 * msmnt.pelvis_width
+        + 0.0089 * msmnt.shoulders
+        - 0.0145 * msmnt.trunk
+        - 0.0278 * msmnt.pelvis
         - 0.507
     )
 
