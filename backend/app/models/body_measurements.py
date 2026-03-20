@@ -16,6 +16,10 @@ This model represents the body measurements of a user, including:
 - right leg circumference (widest point)
 - left_calf circumference (widest point)
 - right_calf circumference (widest point)
+- shoulders width (widest point)
+- trunk length from the top of the widest point on the pelvis (iliac crest) to
+    the vertical level of the bottom of the jaw bone
+- pelvis width (between the iliac spines of the pelvis)
 
 This model is used to track the user's body measurements over time, which can be
 useful for tracking fitness and health progress.
@@ -57,6 +61,9 @@ class BodyMeasurements(Base):
     right_leg: Mapped[float] = mapped_column(Float)
     left_calf: Mapped[float] = mapped_column(Float)
     right_calf: Mapped[float] = mapped_column(Float)
+    shoulders: Mapped[float] = mapped_column(Float)
+    trunk: Mapped[float] = mapped_column(Float)
+    pelvis: Mapped[float] = mapped_column(Float)
 
     user: Mapped["User"] = relationship(
         "User", back_populates="body_measurements"
