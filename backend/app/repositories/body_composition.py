@@ -272,6 +272,71 @@ async def bone_percentage_formula(
     return max(min(bone_perc, 1.0), 0.0)
 
 
+async def muscle_percentage_formula(
+    db: AsyncSession, id_user: int, weight: float
+) -> float:
+    """
+    Calculate appendicular skeletal muscle mass percentage.
+
+    This implementation mocks the necessary user and measurement data for the
+    calculation. In a real implementation, data would be retrieved from the
+    database.
+
+    [1] (https://doi.org/10.1249/01.mss.0000152804.93039.ce)
+    > POORTMANS, JACQUES R.1; BOISSEAU, NATHALIE4; MORAINE, JEAN-JACQUES2;
+    >   MORENO-REYES, RODRIGO3; GOLDMAN, SERGE3.
+    >
+    > Estimation of Total-Body Skeletal Muscle Mass in Children and Adolescents.
+    >
+    > Medicine & Science in Sports & Exercise 37(2):p 316-322, February 2005.
+
+    Args:
+        db: The database session to retrieve data needed for the calculation
+        id_user: The ID of the user to retrieve measurements for
+        weight: The weight of the user to calculate muscle percentage for
+    Returns:
+        The calculated muscle mass percentage as a decimal (e.g., 0.40 for 40%)
+    """
+
+    # Mock user and measurement data for the calculation
+    class MockMeasurement:
+        def __init__(self):
+            self.height = 170
+            self.waist = 80
+            self.hip = 100
+            self.neck = 40
+            self.left_arm = 30
+            self.right_arm = 30
+            self.left_leg = 50
+            self.right_leg = 50
+            self.left_calf = 35
+            self.right_calf = 35
+
+    class MockUser:
+        def __init__(self, id: int):
+            self.id = id
+            self.gender = "MALE"
+            self.age = 30
+
+    msmnt = MockMeasurement()
+    user = MockUser(id_user)
+
+    poortmans_asm_kg = (
+        msmnt.height
+        * (
+            0.0064 * msmnt.left_arm * msmnt.right_arm
+            + 0.0032 * msmnt.left_leg * msmnt.right_leg
+            + 0.0015 * msmnt.left_calf * msmnt.right_calf
+        )
+        + 2.56 * (user.gender == "MALE")
+        + 0.136 * user.age
+    )
+
+    poortmans_asm_perc = poortmans_asm_kg / weight
+
+    return max(min(poortmans_asm_perc, 1.0), 0.0)
+
+
 async def get_body_compositions(db: AsyncSession) -> list[BodyCompositionRead]:
     """
     Get all body compositions.
@@ -327,6 +392,12 @@ async def create_body_composition(
             id_user,
             body_composition.weight,
             body_composition.fat_percentage,
+        )
+
+    # Estimate muscle mass percentage if not provided
+    if body_composition.muscle_percentage is None:
+        body_composition.muscle_percentage = await muscle_percentage_formula(
+            db, id_user, body_composition.weight
         )
 
     # Fill the kg data based on the percentage data
