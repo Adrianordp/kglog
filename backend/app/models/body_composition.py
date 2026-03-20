@@ -17,12 +17,16 @@ This model is used to track the user's body composition over time, which can be
 useful for tracking fitness and health progress.
 """
 
-from datetime import date
+from datetime import datetime
+from typing import TYPE_CHECKING
 
-from sqlalchemy import Date, Float, Integer
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy import DateTime, Float, ForeignKey, Integer
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.models.base import Base
+
+if TYPE_CHECKING:
+    from app.models.user import User
 
 
 class BodyComposition(Base):
@@ -31,7 +35,10 @@ class BodyComposition(Base):
     id: Mapped[int] = mapped_column(
         Integer, primary_key=True, autoincrement=True
     )
-    measure_date: Mapped[date] = mapped_column(Date)
+
+    id_user: Mapped[int] = mapped_column(ForeignKey("users.id"))
+
+    measure_date: Mapped[datetime] = mapped_column(DateTime)
     weight: Mapped[float] = mapped_column(Float)
     fat_percentage: Mapped[float] = mapped_column(Float)
     fat_kg: Mapped[float] = mapped_column(Float)
@@ -41,4 +48,8 @@ class BodyComposition(Base):
     bone_kg: Mapped[float] = mapped_column(Float)
     water_percentage: Mapped[float] = mapped_column(Float)
     water_kg: Mapped[float] = mapped_column(Float)
-    visceral_fat_level: Mapped[float] = mapped_column(Float)
+    visceral_fat: Mapped[float] = mapped_column(Float)
+
+    user: Mapped["User"] = relationship(
+        "User", back_populates="body_compositions"
+    )
