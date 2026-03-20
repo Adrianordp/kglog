@@ -75,7 +75,9 @@ async def update_user(db: AsyncSession, id: int, user: UserUpdate) -> User:
     if not query_element:
         raise ValueError(f"User with id {id} not found")
 
-    for key, value in user.model_dump(exclude_unset=True).items():
+    for key, value in user.model_dump(
+        exclude_unset=True, exclude_none=True
+    ).items():
         if key == "password":
             value = get_password_hash(value)
             key = "password_hash"
