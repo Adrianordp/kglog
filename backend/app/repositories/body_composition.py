@@ -161,8 +161,9 @@ async def water_percentage_formula(
 
 
 async def bone_percentage_formula(
-    db: AsyncSession,
-    id_user: int,
+    user: User,
+    msmnt: BodyMeasurements,
+    age: int,
     weight: float,
     body_fat_percentage: float = 0.15,
 ) -> float:
@@ -188,43 +189,21 @@ async def bone_percentage_formula(
     > ISSN 2666-3376,
 
     Args:
-        db: The database session to retrieve data needed for the calculation
-        id_user: The ID of the user to retrieve measurements for
+        user: The user object containing necessary information for the calculation
+        msmnt: The body measurements object containing necessary measurements
+        age: The age of the user at the time of measurement
         weight: The weight of the user to calculate bone percentage for
         body_fat_percentage: The body fat percentage of the user
     Returns:
         The calculated bone mass percentage as a decimal (e.g., 0.05 for 5%)
     """
 
-    # Mock user and measurement data for the calculation
-    class MockMeasurement:
-        def __init__(
-            self,
-            height: float,
-            shoulder_width: float,
-            trunk_length: float,
-            pelvis_width: float,
-        ):
-            self.height = height
-            self.shoulders = shoulder_width
-            self.trunk = trunk_length
-            self.pelvis = pelvis_width
-
-    class MockUser:
-        def __init__(self, id: int, gender: str, age: int):
-            self.id = id
-            self.gender = gender
-            self.age = age
-
-    msmnt = MockMeasurement(170, 40, 50, 30)
-    user = MockUser(id_user, "MALE", 30)
-
     if user.gender not in ["MALE", "FEMALE"]:
         raise ValueError("Gender must be 'MALE' or 'FEMALE' for estimation.")
 
     bmc_kg_aflatooni = (
         0.0158 * msmnt.height
-        - 0.0024 * user.age
+        - 0.0024 * age
         + 0.1712 * (user.gender == "MALE")
         + 0.0314 * weight * (1 - body_fat_percentage)
         + 0.001 * weight * body_fat_percentage
@@ -382,14 +361,15 @@ async def create_body_composition(
             )
             body_composition.is_water_estimated = True
 
-    if body_composition.bone_percentage is None:
-        body_composition.bone_percentage = await bone_percentage_formula(
-            db,
-            id_user,
-            body_composition.weight,
-            body_composition.fat_percentage,
-        )
-        body_composition.is_bone_estimated = True
+        if body_composition.bone_percentage is None:
+            body_composition.bone_percentage = await bone_percentage_formula(
+                user_record,
+                measurement_record,
+                age,
+                body_composition.weight,
+                body_composition.fat_percentage,
+            )
+            body_composition.is_bone_estimated = True
 
     if body_composition.muscle_percentage is None:
         body_composition.muscle_percentage = await muscle_percentage_formula(
