@@ -23,6 +23,19 @@ async def get_body_measurements(db: AsyncSession) -> list[BodyMeasurements]:
     return result
 
 
+async def get_body_measurement_by_id(
+    db: AsyncSession, id: int
+) -> BodyMeasurements | None:
+    """
+    Get a body measurement by ID.
+    """
+    stmt = select(BodyMeasurements).where(BodyMeasurements.id == id)
+    query = await db.execute(stmt)
+    result = query.scalar_one_or_none()
+
+    return result
+
+
 async def get_body_measurement_by_user_id(
     db: AsyncSession, id_user: int
 ) -> list[BodyMeasurements]:
