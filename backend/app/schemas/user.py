@@ -32,9 +32,7 @@ class UserCreate(UserBase):
     Schema for creating a new user.
     """
 
-    password: str = Field(
-        ..., description="Password for the user", min_length=6
-    )
+    password_hash: str = Field(..., description="Hashed password for the user")
 
     model_config = {
         "json_schema_extra": {
@@ -43,7 +41,7 @@ class UserCreate(UserBase):
                 "email": "john_doe@example.com",
                 "date_of_birth": "1990-01-01",
                 "gender": "MALE",
-                "password": "securepassword123",
+                "password_hash": "$2b$12$KIXQ1Z5e5s5s5s5s5s5sO5u5u5u5u5u5u",
             }
         }
     }
@@ -66,8 +64,8 @@ class UserUpdate(BaseModel):
     gender: Optional[Gender] = Field(
         None, description="Gender of the user (e.g., MALE, FEMALE, OTHER)"
     )
-    password: Optional[str] = Field(
-        None, description="Password for the user", min_length=6
+    password_hash: Optional[str] = Field(
+        None, description="Hashed password for the user"
     )
 
     model_config = {
@@ -77,7 +75,7 @@ class UserUpdate(BaseModel):
                 "email": "john_doe_updated@example.com",
                 "date_of_birth": "1990-01-01",
                 "gender": "MALE",
-                "password": "newsecurepassword123",
+                "password_hash": "$2b$12$KIXQ1Z5e5s5s5s5s5s5sO5u5u5u5u5u5u",
             }
         }
     }
