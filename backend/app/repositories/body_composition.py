@@ -360,20 +360,29 @@ async def create_body_composition(
     """
     Create a new body composition.
     """
+    body_composition.is_bone_estimated = False
+    body_composition.is_fat_estimated = False
+    body_composition.is_muscle_estimated = False
+    body_composition.is_visceral_fat_estimated = False
+    body_composition.is_water_estimated = False
+
     if body_composition.visceral_fat is None:
         body_composition.visceral_fat = await viceral_fat_formula(
             db, id_user, body_composition.weight
         )
+        body_composition.is_visceral_fat_estimated = True
 
     if body_composition.fat_percentage is None:
         body_composition.fat_percentage = await fat_percentage_formula(
             db, id_user, body_composition.weight
         )
+        body_composition.is_fat_estimated = True
 
     if body_composition.water_percentage is None:
         body_composition.water_percentage = await water_percentage_formula(
             db, id_user, body_composition.weight
         )
+        body_composition.is_water_estimated = True
 
     if body_composition.bone_percentage is None:
         body_composition.bone_percentage = await bone_percentage_formula(
@@ -382,11 +391,13 @@ async def create_body_composition(
             body_composition.weight,
             body_composition.fat_percentage,
         )
+        body_composition.is_bone_estimated = True
 
     if body_composition.muscle_percentage is None:
         body_composition.muscle_percentage = await muscle_percentage_formula(
             db, id_user, body_composition.weight
         )
+        body_composition.is_muscle_estimated = True
 
     kg_data = {}
     kg_data["fat_kg"] = (
