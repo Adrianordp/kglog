@@ -9,7 +9,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.models.body_composition import BodyComposition
 from app.models.body_measurements import BodyMeasurements
-from app.models.user import User
+from app.models.user import Gender, User
 from app.repositories.body_measurements import (
     get_body_measurement_by_id,
 )
@@ -72,10 +72,10 @@ async def viceral_fat_formula(
         The calculated visceral fat area (VFA) in cm²
     """
 
-    if user.gender not in ["MALE", "FEMALE"]:
+    if user.gender not in [Gender.MALE, Gender.FEMALE]:
         raise ValueError("Gender must be 'MALE' or 'FEMALE' for estimation.")
 
-    if user.gender == "MALE":
+    if user.gender == Gender.MALE:
         vfa_liu = 3.7 * age + 2.4 * msmnt.waist + 5.5 * msmnt.neck - 443.6
     else:
         vfa_liu = 2.8 * age + 1.7 * msmnt.waist + 6.5 * msmnt.neck - 367.3
@@ -107,10 +107,10 @@ async def fat_percentage_formula(user: User, msmnt: BodyMeasurements) -> float:
         The calculated fat percentage as a decimal (e.g., 0.15 for 15%)
     """
 
-    if user.gender not in ["MALE", "FEMALE"]:
+    if user.gender not in [Gender.MALE, Gender.FEMALE]:
         raise ValueError("Gender must be 'MALE' or 'FEMALE' for estimation.")
 
-    if user.gender == "MALE":
+    if user.gender == Gender.MALE:
         bf_woolcott = 76 - 20 * (msmnt.height / msmnt.waist)
     else:
         bf_woolcott = 64 - 20 * (msmnt.height / msmnt.waist)
@@ -145,10 +145,10 @@ async def water_percentage_formula(
         The calculated water percentage as a decimal (e.g., 0.60 for 60%)
     """
 
-    if user.gender not in ["MALE", "FEMALE"]:
+    if user.gender not in [Gender.MALE, Gender.FEMALE]:
         raise ValueError("Gender must be 'MALE' or 'FEMALE' for estimation.")
 
-    if user.gender == "MALE":
+    if user.gender == Gender.MALE:
         water_watson = (
             2.447 - 0.09156 * age + 0.1074 * msmnt.height + 0.3362 * weight
         )
@@ -198,13 +198,13 @@ async def bone_percentage_formula(
         The calculated bone mass percentage as a decimal (e.g., 0.05 for 5%)
     """
 
-    if user.gender not in ["MALE", "FEMALE"]:
+    if user.gender not in [Gender.MALE, Gender.FEMALE]:
         raise ValueError("Gender must be 'MALE' or 'FEMALE' for estimation.")
 
     bmc_kg_aflatooni = (
         0.0158 * msmnt.height
         - 0.0024 * age
-        + 0.1712 * (user.gender == "MALE")
+        + 0.1712 * (user.gender == Gender.MALE)
         + 0.0314 * weight * (1 - body_fat_percentage)
         + 0.001 * weight * body_fat_percentage
         + 0.0089 * msmnt.shoulders
@@ -245,7 +245,7 @@ async def muscle_percentage_formula(
         The calculated muscle mass percentage as a decimal (e.g., 0.40 for 40%)
     """
 
-    if user.gender not in ["MALE", "FEMALE"]:
+    if user.gender not in [Gender.MALE, Gender.FEMALE]:
         raise ValueError("Gender must be 'MALE' or 'FEMALE' for estimation.")
 
     poortmans_asm_kg = (
@@ -255,7 +255,7 @@ async def muscle_percentage_formula(
             + 0.0032 * msmnt.left_leg * msmnt.right_leg
             + 0.0015 * msmnt.left_calf * msmnt.right_calf
         )
-        + 2.56 * (user.gender == "MALE")
+        + 2.56 * (user.gender == Gender.MALE)
         + 0.136 * age
     )
 
