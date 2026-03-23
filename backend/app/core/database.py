@@ -37,6 +37,6 @@ async def get_async_db() -> AsyncGenerator[AsyncSession, None]:
         yield session
 
 
-def get_db() -> Generator[Session, None, None]:
+def get_sync_db() -> Generator[Session, None, None]:
     with SessionLocal() as session:
         yield session
