@@ -1,3 +1,7 @@
+"""
+Database configuration and session management for the application.
+"""
+
 from typing import AsyncGenerator, Generator
 
 from sqlalchemy import create_engine
