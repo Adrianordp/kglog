@@ -16,6 +16,11 @@ def test_body_composition_create():
         "bone_percentage": 0.05,
         "water_percentage": 0.60,
         "visceral_fat": 100.0,
+        "is_fat_estimated": True,
+        "is_muscle_estimated": True,
+        "is_bone_estimated": True,
+        "is_water_estimated": True,
+        "is_visceral_fat_estimated": True,
     }
 
     body_composition_create = BodyCompositionCreate(**data)
@@ -31,6 +36,21 @@ def test_body_composition_create():
     assert body_composition_create.bone_percentage == data["bone_percentage"]
     assert body_composition_create.water_percentage == data["water_percentage"]
     assert body_composition_create.visceral_fat == data["visceral_fat"]
+    assert body_composition_create.is_fat_estimated == data["is_fat_estimated"]
+    assert (
+        body_composition_create.is_muscle_estimated
+        == data["is_muscle_estimated"]
+    )
+    assert (
+        body_composition_create.is_bone_estimated == data["is_bone_estimated"]
+    )
+    assert (
+        body_composition_create.is_water_estimated == data["is_water_estimated"]
+    )
+    assert (
+        body_composition_create.is_visceral_fat_estimated
+        == data["is_visceral_fat_estimated"]
+    )
 
 
 def test_body_composition_read():
@@ -48,6 +68,11 @@ def test_body_composition_read():
         "water_percentage": 0.60,
         "water_kg": 42.0,
         "visceral_fat": 10.0,
+        "is_fat_estimated": True,
+        "is_muscle_estimated": True,
+        "is_bone_estimated": True,
+        "is_water_estimated": True,
+        "is_visceral_fat_estimated": True,
     }
 
     body_composition_read = BodyCompositionRead(**data)
@@ -67,6 +92,18 @@ def test_body_composition_read():
     assert body_composition_read.bone_kg == data["bone_kg"]
     assert body_composition_read.water_kg == data["water_kg"]
     assert body_composition_read.visceral_fat == data["visceral_fat"]
+    assert body_composition_read.is_fat_estimated == data["is_fat_estimated"]
+    assert (
+        body_composition_read.is_muscle_estimated == data["is_muscle_estimated"]
+    )
+    assert body_composition_read.is_bone_estimated == data["is_bone_estimated"]
+    assert (
+        body_composition_read.is_water_estimated == data["is_water_estimated"]
+    )
+    assert (
+        body_composition_read.is_visceral_fat_estimated
+        == data["is_visceral_fat_estimated"]
+    )
 
 
 def test_body_composition_update():
@@ -78,6 +115,11 @@ def test_body_composition_update():
         "bone_percentage": 0.06,
         "water_percentage": 0.61,
         "visceral_fat": 9.0,
+        "is_fat_estimated": True,
+        "is_muscle_estimated": True,
+        "is_bone_estimated": True,
+        "is_water_estimated": True,
+        "is_visceral_fat_estimated": True,
     }
 
     body_composition_update = BodyCompositionUpdate(**data)
@@ -93,6 +135,21 @@ def test_body_composition_update():
     assert body_composition_update.bone_percentage == data["bone_percentage"]
     assert body_composition_update.water_percentage == data["water_percentage"]
     assert body_composition_update.visceral_fat == data["visceral_fat"]
+    assert body_composition_update.is_fat_estimated == data["is_fat_estimated"]
+    assert (
+        body_composition_update.is_muscle_estimated
+        == data["is_muscle_estimated"]
+    )
+    assert (
+        body_composition_update.is_bone_estimated == data["is_bone_estimated"]
+    )
+    assert (
+        body_composition_update.is_water_estimated == data["is_water_estimated"]
+    )
+    assert (
+        body_composition_update.is_visceral_fat_estimated
+        == data["is_visceral_fat_estimated"]
+    )
 
 
 def test_body_composition_create_invalid_measure_date():
@@ -104,6 +161,11 @@ def test_body_composition_create_invalid_measure_date():
         "bone_percentage": 0.05,
         "water_percentage": 0.60,
         "visceral_fat": 100.0,
+        "is_fat_estimated": True,
+        "is_muscle_estimated": True,
+        "is_bone_estimated": True,
+        "is_water_estimated": True,
+        "is_visceral_fat_estimated": True,
     }
 
     try:
@@ -134,6 +196,11 @@ def test_body_composition_create_invalid_high_percentage():
         "bone_percentage": 1,  # Invalid percentage
         "water_percentage": 1,  # Invalid percentage
         "visceral_fat": 100.0,
+        "is_fat_estimated": True,
+        "is_muscle_estimated": True,
+        "is_bone_estimated": True,
+        "is_water_estimated": True,
+        "is_visceral_fat_estimated": True,
     }
 
     try:
@@ -167,6 +234,11 @@ def test_body_composition_create_invalid_low_percentage():
         "bone_percentage": 0,  # Invalid percentage
         "water_percentage": 0,  # Invalid percentage
         "visceral_fat": 100.0,
+        "is_fat_estimated": True,
+        "is_muscle_estimated": True,
+        "is_bone_estimated": True,
+        "is_water_estimated": True,
+        "is_visceral_fat_estimated": True,
     }
 
     try:
@@ -200,6 +272,11 @@ def test_body_composition_create_invalid_weight():
         "bone_percentage": 0.05,
         "water_percentage": 0.60,
         "visceral_fat": 100.0,
+        "is_fat_estimated": True,
+        "is_muscle_estimated": True,
+        "is_bone_estimated": True,
+        "is_water_estimated": True,
+        "is_visceral_fat_estimated": True,
     }
 
     try:
@@ -230,6 +307,11 @@ def test_body_composition_create_invalid_visceral_fat():
         "bone_percentage": 0.05,
         "water_percentage": 0.60,
         "visceral_fat": -0.001,  # Invalid visceral fat
+        "is_fat_estimated": True,
+        "is_muscle_estimated": True,
+        "is_bone_estimated": True,
+        "is_water_estimated": True,
+        "is_visceral_fat_estimated": True,
     }
 
     try:
