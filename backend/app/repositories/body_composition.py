@@ -119,7 +119,7 @@ async def fat_percentage_formula(user: User, msmnt: BodyMeasurements) -> float:
 
 
 async def water_percentage_formula(
-    db: AsyncSession, id_user: int, weight: float
+    user: User, msmnt: BodyMeasurements, age: int, weight: float
 ) -> float:
     """
     Calculate water percentage based on Watson formula.
@@ -137,41 +137,23 @@ async def water_percentage_formula(
     > 1980
 
     Args:
-        db: The database session to retrieve data needed for the calculation
-        id_user: The ID of the user to retrieve measurements for
+        user: The user object containing necessary information for the calculation
+        msmnt: The body measurements object containing necessary measurements
+        age: The age of the user at the time of measurement
         weight: The weight of the user to calculate water percentage for
     Returns:
         The calculated water percentage as a decimal (e.g., 0.60 for 60%)
     """
 
-    # Mock user and measurement data for the calculation
-    class MockMeasurement:
-        def __init__(
-            self, height: float, waist: float, hip: float, neck: float
-        ):
-            self.height = height
-            self.waist = waist
-            self.hip = hip
-            self.neck = neck
-
-    class MockUser:
-        def __init__(self, id: int, gender: str, age: int):
-            self.id = id
-            self.gender = gender
-            self.age = age
-
-    mst = MockMeasurement(170, 80, 100, 40)
-    usr = MockUser(id_user, "MALE", 30)
-
-    if usr.gender not in ["MALE", "FEMALE"]:
+    if user.gender not in ["MALE", "FEMALE"]:
         raise ValueError("Gender must be 'MALE' or 'FEMALE' for estimation.")
 
-    if usr.gender == "MALE":
+    if user.gender == "MALE":
         water_watson = (
-            2.447 - 0.09156 * usr.age + 0.1074 * mst.height + 0.3362 * weight
+            2.447 - 0.09156 * age + 0.1074 * msmnt.height + 0.3362 * weight
         )
     else:
-        water_watson = -2.097 + 0.1069 * mst.height + 0.2466 * weight
+        water_watson = -2.097 + 0.1069 * msmnt.height + 0.2466 * weight
 
     water_perc = water_watson / weight
 
@@ -394,11 +376,11 @@ async def create_body_composition(
             )
             body_composition.is_fat_estimated = True
 
-    if body_composition.water_percentage is None:
-        body_composition.water_percentage = await water_percentage_formula(
-            db, id_user, body_composition.weight
-        )
-        body_composition.is_water_estimated = True
+        if body_composition.water_percentage is None:
+            body_composition.water_percentage = await water_percentage_formula(
+                user_record, measurement_record, age, body_composition.weight
+            )
+            body_composition.is_water_estimated = True
 
     if body_composition.bone_percentage is None:
         body_composition.bone_percentage = await bone_percentage_formula(
