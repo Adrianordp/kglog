@@ -50,6 +50,11 @@ class BodyComposition(Base):
     water_kg: Mapped[float] = mapped_column(Float)
     visceral_fat: Mapped[float] = mapped_column(Float)
 
+    is_fat_estimated: Mapped[bool] = mapped_column(default=True)
+    is_muscle_estimated: Mapped[bool] = mapped_column(default=True)
+    is_bone_estimated: Mapped[bool] = mapped_column(default=True)
+    is_water_estimated: Mapped[bool] = mapped_column(default=True)
+
     user: Mapped["User"] = relationship(
         "User", back_populates="body_compositions"
     )
