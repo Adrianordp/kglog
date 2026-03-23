@@ -61,6 +61,7 @@ def test_body_composition_read():
     data = {
         "id": 1,
         "id_user": 1,
+        "id_measurements": 1,
         "measure_date": "2024-01-01T00:00:00+00:00",
         "weight": 70.0,
         "fat_percentage": 0.15,
@@ -83,6 +84,7 @@ def test_body_composition_read():
 
     assert body_composition_read.id == data["id"]
     assert body_composition_read.id_user == data["id_user"]
+    assert body_composition_read.id_measurements == data["id_measurements"]
     assert body_composition_read.measure_date == datetime.fromisoformat(
         data["measure_date"]
     )
@@ -112,6 +114,7 @@ def test_body_composition_read():
 
 def test_body_composition_update():
     data = {
+        "id_measurements": 1,
         "measure_date": "2024-01-02T00:00:00+00:00",
         "weight": 71.0,
         "fat_percentage": 0.14,
@@ -128,6 +131,7 @@ def test_body_composition_update():
 
     body_composition_update = BodyCompositionUpdate(**data)
 
+    assert body_composition_update.id_measurements == data["id_measurements"]
     assert body_composition_update.measure_date == datetime.fromisoformat(
         data["measure_date"]
     )
@@ -158,6 +162,8 @@ def test_body_composition_update():
 
 def test_body_composition_create_invalid_measure_date():
     data = {
+        "id_user": 1,
+        "id_measurements": 1,
         "measure_date": "invalid_date",
         "weight": 70.0,
         "fat_percentage": 0.15,
@@ -193,6 +199,8 @@ def test_body_composition_update_invalid_measure_date():
 
 def test_body_composition_create_invalid_high_percentage():
     data = {
+        "id_user": 1,
+        "id_measurements": 1,
         "measure_date": "2024-01-01T00:00:00+00:00",
         "weight": 70.0,
         "fat_percentage": 1,  # Invalid percentage
@@ -231,6 +239,8 @@ def test_body_composition_update_invalid_high_percentage():
 
 def test_body_composition_create_invalid_low_percentage():
     data = {
+        "id_user": 1,
+        "id_measurements": 1,
         "measure_date": "2024-01-01T00:00:00+00:00",
         "weight": 70.0,
         "fat_percentage": 0,  # Invalid percentage
@@ -269,6 +279,8 @@ def test_body_composition_update_invalid_low_percentage():
 
 def test_body_composition_create_invalid_weight():
     data = {
+        "id_user": 1,
+        "id_measurements": 1,
         "measure_date": "2024-01-01T00:00:00+00:00",
         "weight": -1,  # Invalid weight
         "fat_percentage": 0.15,
@@ -304,6 +316,8 @@ def test_body_composition_update_invalid_weight():
 
 def test_body_composition_create_invalid_visceral_fat():
     data = {
+        "id_user": 1,
+        "id_measurements": 1,
         "measure_date": "2024-01-01T00:00:00+00:00",
         "weight": 70.0,
         "fat_percentage": 0.15,
