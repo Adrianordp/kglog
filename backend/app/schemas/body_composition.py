@@ -33,6 +33,10 @@ class BodyCompositionBase(BaseModel):
         True,
         description="Indicates if the water percentage is estimated (true) or measured (false)",
     )
+    is_visceral_fat_estimated: Optional[bool] = Field(
+        True,
+        description="Indicates if the visceral fat level is estimated (true) or measured (false)",
+    )
 
 
 class BodyCompositionCreate(BodyCompositionBase):
@@ -84,6 +88,7 @@ class BodyCompositionCreate(BodyCompositionBase):
                 "is_muscle_estimated": True,
                 "is_bone_estimated": True,
                 "is_water_estimated": True,
+                "is_visceral_fat_estimated": True,
             }
         }
     }
@@ -144,6 +149,7 @@ class BodyCompositionUpdate(BaseModel):
                 "is_muscle_estimated": True,
                 "is_bone_estimated": True,
                 "is_water_estimated": True,
+                "is_visceral_fat_estimated": True,
             }
         }
     }
@@ -218,6 +224,7 @@ class BodyCompositionRead(BodyCompositionBase):
                 "is_muscle_estimated": True,
                 "is_bone_estimated": True,
                 "is_water_estimated": True,
+                "is_visceral_fat_estimated": True,
             }
         }
     }
