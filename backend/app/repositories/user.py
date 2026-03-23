@@ -53,10 +53,7 @@ async def create_user(db: AsyncSession, user: UserCreate) -> User:
     """
     Create a new user.
     """
-    user_data = user.model_dump()
-    user_data["password_hash"] = get_password_hash(user_data["password"])
-    user_data.pop("password")
-    new_user = User(**user_data)
+    new_user = User(**user.model_dump())
     db.add(new_user)
     await db.commit()
     await db.refresh(new_user)
@@ -78,9 +75,6 @@ async def update_user(db: AsyncSession, id: int, user: UserUpdate) -> User:
     for key, value in user.model_dump(
         exclude_unset=True, exclude_none=True
     ).items():
-        if key == "password":
-            value = get_password_hash(value)
-            key = "password_hash"
         setattr(query_element, key, value)
 
     await db.commit()
