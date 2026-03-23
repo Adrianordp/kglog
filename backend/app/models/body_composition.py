@@ -18,7 +18,7 @@ useful for tracking fitness and health progress.
 """
 
 from datetime import datetime
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Optional
 
 from sqlalchemy import DateTime, Float, ForeignKey, Integer
 from sqlalchemy.orm import Mapped, mapped_column, relationship
@@ -37,6 +37,9 @@ class BodyComposition(Base):
     )
 
     id_user: Mapped[int] = mapped_column(ForeignKey("users.id"))
+    id_measurements: Mapped[Optional[int]] = mapped_column(
+        ForeignKey("body_measurements.id")
+    )
 
     measure_date: Mapped[datetime] = mapped_column(DateTime)
     weight: Mapped[float] = mapped_column(Float)
