@@ -1,3 +1,7 @@
+"""
+Application settings module.
+"""
+
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
