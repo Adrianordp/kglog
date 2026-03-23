@@ -322,7 +322,6 @@ async def create_body_composition(
             body_composition.visceral_fat = await viceral_fat_formula(
                 user_record,
                 measurement_record,
-                body_composition.weight,
                 age,
             )
             body_composition.is_visceral_fat_estimated = True
