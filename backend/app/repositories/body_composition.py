@@ -372,7 +372,6 @@ async def create_body_composition(
     )
 
     new_body_composition = BodyComposition(
-        id_user=id_user,
         **body_composition.model_dump(),
         **kg_data,
     )
