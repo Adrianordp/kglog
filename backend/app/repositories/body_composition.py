@@ -83,9 +83,7 @@ async def viceral_fat_formula(
     return max(vfa_liu, 0)
 
 
-async def fat_percentage_formula(
-    db: AsyncSession, id_user: int, weight: float
-) -> float:
+async def fat_percentage_formula(user: User, msmnt: BodyMeasurements) -> float:
     """
     Calculate fat percentage based on weight and other measurements.
 
@@ -103,29 +101,11 @@ async def fat_percentage_formula(
     > 2018
 
     Args:
-        db: The database session to retrieve data needed for the calculation
-        id_user: The ID of the user to retrieve measurements for
-        weight: The weight of the user to calculate fat percentage for
+        user: The user object containing necessary information for the calculation
+        msmnt: The body measurements object containing necessary measurements
     Returns:
         The calculated fat percentage as a decimal (e.g., 0.15 for 15%)
     """
-
-    # Mock user and measurement data for the calculation
-    class MockMeasurement:
-        def __init__(self):
-            self.height = 170
-            self.waist = 80
-            self.hip = 100
-            self.neck = 40
-
-    class MockUser:
-        def __init__(self, id: int):
-            self.id = id
-            self.gender = "MALE"
-            self.age = 30
-
-    msmnt = MockMeasurement()
-    user = MockUser(id_user)
 
     if user.gender not in ["MALE", "FEMALE"]:
         raise ValueError("Gender must be 'MALE' or 'FEMALE' for estimation.")
@@ -408,11 +388,11 @@ async def create_body_composition(
             )
             body_composition.is_visceral_fat_estimated = True
 
-    if body_composition.fat_percentage is None:
-        body_composition.fat_percentage = await fat_percentage_formula(
-            db, id_user, body_composition.weight
-        )
-        body_composition.is_fat_estimated = True
+        if body_composition.fat_percentage is None:
+            body_composition.fat_percentage = await fat_percentage_formula(
+                user_record, measurement_record
+            )
+            body_composition.is_fat_estimated = True
 
     if body_composition.water_percentage is None:
         body_composition.water_percentage = await water_percentage_formula(
