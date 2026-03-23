@@ -134,6 +134,26 @@ class BodyCompositionUpdate(BaseModel):
         description="Visceral fat level in cm² (calculated based on weight and fat percentage)",
         ge=0.0,
     )
+    is_fat_estimated: Optional[bool] = Field(
+        None,
+        description="Indicates if the fat percentage is estimated (true) or measured (false)",
+    )
+    is_muscle_estimated: Optional[bool] = Field(
+        None,
+        description="Indicates if the muscle percentage is estimated (true) or measured (false)",
+    )
+    is_bone_estimated: Optional[bool] = Field(
+        None,
+        description="Indicates if the bone percentage is estimated (true) or measured (false)",
+    )
+    is_water_estimated: Optional[bool] = Field(
+        None,
+        description="Indicates if the water percentage is estimated (true) or measured (false)",
+    )
+    is_visceral_fat_estimated: Optional[bool] = Field(
+        None,
+        description="Indicates if the visceral fat level is estimated (true) or measured (false)",
+    )
 
     model_config = {
         "json_schema_extra": {
