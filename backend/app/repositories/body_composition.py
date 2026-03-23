@@ -6,6 +6,12 @@ from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.models.body_composition import BodyComposition
+from app.models.body_measurements import BodyMeasurements
+from app.models.user import User
+from app.repositories.body_measurements import (
+    get_body_measurement_by_id,
+)
+from app.repositories.user import get_user_by_id
 from app.schemas.body_composition import (
     BodyCompositionCreate,
     BodyCompositionRead,
@@ -14,7 +20,8 @@ from app.schemas.body_composition import (
 
 
 async def viceral_fat_formula(
-    db: AsyncSession, id_user: int, weight: float
+    user: User,
+    msmnt: BodyMeasurements,
 ) -> float:
     """
     Calculate visceral fat area (VFA).
@@ -41,29 +48,23 @@ async def viceral_fat_formula(
         The calculated visceral fat area (VFA) in cm²
     """
 
-    class MockMeasurement:
-        def __init__(self):
-            self.height = 170
-            self.waist = 80
-            self.hip = 100
-            self.neck = 40
+    date_of_birth = user.date_of_birth
+    measure_date = msmnt.measure_date
+    age = measure_date.year - date_of_birth.year
 
-    class MockUser:
-        def __init__(self, id: int):
-            self.id = id
-            self.gender = "MALE"
-            self.age = 30
-
-    msmnt = MockMeasurement()
-    user = MockUser(id_user)
+    if (measure_date.month, measure_date.day) < (
+        date_of_birth.month,
+        date_of_birth.day,
+    ):
+        age -= 1
 
     if user.gender not in ["MALE", "FEMALE"]:
         raise ValueError("Gender must be 'MALE' or 'FEMALE' for estimation.")
 
     if user.gender == "MALE":
-        vfa_liu = 3.7 * user.age + 2.4 * msmnt.waist + 5.5 * msmnt.neck - 443.6
+        vfa_liu = 3.7 * age + 2.4 * msmnt.waist + 5.5 * msmnt.neck - 443.6
     else:
-        vfa_liu = 2.8 * user.age + 1.7 * msmnt.waist + 6.5 * msmnt.neck - 367.3
+        vfa_liu = 2.8 * age + 1.7 * msmnt.waist + 6.5 * msmnt.neck - 367.3
 
     return max(vfa_liu, 0)
 
@@ -366,11 +367,25 @@ async def create_body_composition(
     body_composition.is_visceral_fat_estimated = False
     body_composition.is_water_estimated = False
 
-    if body_composition.visceral_fat is None:
-        body_composition.visceral_fat = await viceral_fat_formula(
-            db, id_user, body_composition.weight
+    # Collect measurements for estimation if provided
+    if body_composition.id_measurements is not None:
+        measurement_record = await get_body_measurement_by_id(
+            db, body_composition.id_measurements
         )
-        body_composition.is_visceral_fat_estimated = True
+
+        if measurement_record is None:
+            raise ValueError(
+                f"Measurements with ID {body_composition.id_measurements} not found"
+            )
+
+        # Collect user information for estimation
+        user_record = await get_user_by_id(db, id_user)
+
+        if body_composition.visceral_fat is None:
+            body_composition.visceral_fat = await viceral_fat_formula(
+                db, user_record, measurement_record, body_composition.weight
+            )
+            body_composition.is_visceral_fat_estimated = True
 
     if body_composition.fat_percentage is None:
         body_composition.fat_percentage = await fat_percentage_formula(
