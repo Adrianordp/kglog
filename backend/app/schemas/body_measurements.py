@@ -54,6 +54,25 @@ class BodyMeasurementBase(BaseModel):
     right_calf: float = Field(
         ..., description="Right calf widest circumference in centimeters", gt=0
     )
+    shoulders: float = Field(
+        ..., description="Shoulders width (widest point) in centimeters", gt=0
+    )
+    trunk: float = Field(
+        ...,
+        description=(
+            "Trunk length from the top of the widest point on the pelvis "
+            "(iliac crest) to the vertical level of the bottom of the jaw "
+            "bone in centimeters"
+        ),
+        gt=0,
+    )
+    pelvis: float = Field(
+        ...,
+        description=(
+            "Pelvis width (between iliac spines of the pelvis) in centimeters"
+        ),
+        gt=0,
+    )
 
 
 class BodyMeasurementCreate(BodyMeasurementBase):
@@ -133,6 +152,25 @@ class BodyMeasurementUpdate(BodyMeasurementBase):
     )
     right_calf: Optional[float] = Field(
         None, description="Right calf widest circumference in centimeters", gt=0
+    )
+    shoulders: Optional[float] = Field(
+        None, description="Shoulders width (widest point) in centimeters", gt=0
+    )
+    trunk: Optional[float] = Field(
+        None,
+        description=(
+            "Trunk length from the top of the widest point on the pelvis "
+            "(iliac crest) to the vertical level of the bottom of the jaw "
+            "bone in centimeters"
+        ),
+        gt=0,
+    )
+    pelvis: Optional[float] = Field(
+        None,
+        description=(
+            "Pelvis width (between iliac spines of the pelvis) in centimeters"
+        ),
+        gt=0,
     )
 
 
