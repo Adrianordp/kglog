@@ -2,6 +2,8 @@
 Repository for managing body composition in the database.
 """
 
+from datetime import date, datetime
+
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -19,9 +21,31 @@ from app.schemas.body_composition import (
 )
 
 
+async def calculate_age(date_of_birth: date, measure_date: datetime) -> int:
+    """
+    Calculate age based on date of birth and measurement date.
+
+    Args:
+        date_of_birth: The user's date of birth
+        measure_date: The date when the measurements were taken
+    Returns:
+        The calculated age in years
+    """
+    age = measure_date.year - date_of_birth.year
+
+    if (measure_date.month, measure_date.day) < (
+        date_of_birth.month,
+        date_of_birth.day,
+    ):
+        age -= 1
+
+    return age
+
+
 async def viceral_fat_formula(
     user: User,
     msmnt: BodyMeasurements,
+    age: int,
 ) -> float:
     """
     Calculate visceral fat area (VFA).
@@ -41,22 +65,12 @@ async def viceral_fat_formula(
     > 2022
 
     Args:
-        db: The database session to retrieve data needed for the calculation
-        id_user: The ID of the user to retrieve measurements for
-        weight: The weight of the user to calculate visceral fat for
+        user: The user object containing necessary information for the calculation
+        msmnt: The body measurements object containing necessary measurements
+        age: The age of the user at the time of measurement
     Returns:
         The calculated visceral fat area (VFA) in cm²
     """
-
-    date_of_birth = user.date_of_birth
-    measure_date = msmnt.measure_date
-    age = measure_date.year - date_of_birth.year
-
-    if (measure_date.month, measure_date.day) < (
-        date_of_birth.month,
-        date_of_birth.day,
-    ):
-        age -= 1
 
     if user.gender not in ["MALE", "FEMALE"]:
         raise ValueError("Gender must be 'MALE' or 'FEMALE' for estimation.")
@@ -381,9 +395,16 @@ async def create_body_composition(
         # Collect user information for estimation
         user_record = await get_user_by_id(db, id_user)
 
+        age = await calculate_age(
+            user_record.date_of_birth, measurement_record.measure_date
+        )
+
         if body_composition.visceral_fat is None:
             body_composition.visceral_fat = await viceral_fat_formula(
-                db, user_record, measurement_record, body_composition.weight
+                user_record,
+                measurement_record,
+                body_composition.weight,
+                age,
             )
             body_composition.is_visceral_fat_estimated = True
 
