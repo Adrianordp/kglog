@@ -17,6 +17,22 @@ class BodyCompositionBase(BaseModel):
         ..., description="Date of measurement in YYYY-MM-DDTHH:MM:SS format"
     )
     weight: float = Field(..., description="Weight in kilograms", gt=0.0)
+    is_fat_estimated: Optional[bool] = Field(
+        True,
+        description="Indicates if the fat percentage is estimated (true) or measured (false)",
+    )
+    is_muscle_estimated: Optional[bool] = Field(
+        True,
+        description="Indicates if the muscle percentage is estimated (true) or measured (false)",
+    )
+    is_bone_estimated: Optional[bool] = Field(
+        True,
+        description="Indicates if the bone percentage is estimated (true) or measured (false)",
+    )
+    is_water_estimated: Optional[bool] = Field(
+        True,
+        description="Indicates if the water percentage is estimated (true) or measured (false)",
+    )
 
 
 class BodyCompositionCreate(BodyCompositionBase):
@@ -64,6 +80,10 @@ class BodyCompositionCreate(BodyCompositionBase):
                 "bone_percentage": 0.05,
                 "water_percentage": 0.60,
                 "visceral_fat": 100.0,
+                "is_fat_estimated": True,
+                "is_muscle_estimated": True,
+                "is_bone_estimated": True,
+                "is_water_estimated": True,
             }
         }
     }
@@ -120,6 +140,10 @@ class BodyCompositionUpdate(BaseModel):
                 "bone_percentage": 0.05,
                 "water_percentage": 0.60,
                 "visceral_fat": 100.0,
+                "is_fat_estimated": True,
+                "is_muscle_estimated": True,
+                "is_bone_estimated": True,
+                "is_water_estimated": True,
             }
         }
     }
@@ -190,6 +214,10 @@ class BodyCompositionRead(BodyCompositionBase):
                 "water_percentage": 0.60,
                 "water_kg": 42.0,
                 "visceral_fat": 100.0,
+                "is_fat_estimated": True,
+                "is_muscle_estimated": True,
+                "is_bone_estimated": True,
+                "is_water_estimated": True,
             }
         }
     }
