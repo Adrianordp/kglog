@@ -219,7 +219,7 @@ async def bone_percentage_formula(
 
 
 async def muscle_percentage_formula(
-    db: AsyncSession, id_user: int, weight: float
+    user: User, msmnt: BodyMeasurements, age: int, weight: float
 ) -> float:
     """
     Calculate appendicular skeletal muscle mass percentage.
@@ -237,35 +237,13 @@ async def muscle_percentage_formula(
     > Medicine & Science in Sports & Exercise 37(2):p 316-322, February 2005.
 
     Args:
-        db: The database session to retrieve data needed for the calculation
-        id_user: The ID of the user to retrieve measurements for
+        user: The user object containing necessary information for the calculation
+        msmnt: The body measurements object containing necessary measurements
+        age: The age of the user at the time of measurement
         weight: The weight of the user to calculate muscle percentage for
     Returns:
         The calculated muscle mass percentage as a decimal (e.g., 0.40 for 40%)
     """
-
-    # Mock user and measurement data for the calculation
-    class MockMeasurement:
-        def __init__(self):
-            self.height = 170
-            self.waist = 80
-            self.hip = 100
-            self.neck = 40
-            self.left_arm = 30
-            self.right_arm = 30
-            self.left_leg = 50
-            self.right_leg = 50
-            self.left_calf = 35
-            self.right_calf = 35
-
-    class MockUser:
-        def __init__(self, id: int):
-            self.id = id
-            self.gender = "MALE"
-            self.age = 30
-
-    msmnt = MockMeasurement()
-    user = MockUser(id_user)
 
     if user.gender not in ["MALE", "FEMALE"]:
         raise ValueError("Gender must be 'MALE' or 'FEMALE' for estimation.")
@@ -278,7 +256,7 @@ async def muscle_percentage_formula(
             + 0.0015 * msmnt.left_calf * msmnt.right_calf
         )
         + 2.56 * (user.gender == "MALE")
-        + 0.136 * user.age
+        + 0.136 * age
     )
 
     poortmans_asm_perc = poortmans_asm_kg / weight
@@ -371,11 +349,13 @@ async def create_body_composition(
             )
             body_composition.is_bone_estimated = True
 
-    if body_composition.muscle_percentage is None:
-        body_composition.muscle_percentage = await muscle_percentage_formula(
-            db, id_user, body_composition.weight
-        )
-        body_composition.is_muscle_estimated = True
+        if body_composition.muscle_percentage is None:
+            body_composition.muscle_percentage = (
+                await muscle_percentage_formula(
+                    db, user_record, measurement_record, body_composition.weight
+                )
+            )
+            body_composition.is_muscle_estimated = True
 
     kg_data = {}
     kg_data["fat_kg"] = (
