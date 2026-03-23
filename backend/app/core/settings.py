@@ -9,7 +9,7 @@ class Settings(BaseSettings):
     DEBUG: bool = False
 
     # Database settings
-    DATABASE_URL: str = "sqlite:///./test.db"
+    DATABASE_URL: str = "postgresql+asyncpg://kglog:kglog@localhost:5432/kglog"
 
     # JWT settings
     SECRET_KEY: str = "your-secret-key"
