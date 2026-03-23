@@ -9,6 +9,8 @@ from app.schemas.body_composition import (
 
 def test_body_composition_create():
     data = {
+        "id_user": 1,
+        "id_measurements": 1,
         "measure_date": "2024-01-01T00:00:00+00:00",
         "weight": 70.0,
         "fat_percentage": 0.15,
@@ -25,6 +27,8 @@ def test_body_composition_create():
 
     body_composition_create = BodyCompositionCreate(**data)
 
+    assert body_composition_create.id_user == data["id_user"]
+    assert body_composition_create.id_measurements == data["id_measurements"]
     assert body_composition_create.measure_date == datetime.fromisoformat(
         data["measure_date"]
     )
