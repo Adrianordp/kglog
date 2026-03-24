@@ -98,6 +98,9 @@ class BodyMeasurementCreate(BodyMeasurementBase):
                 "right_leg": 50.0,
                 "left_calf": 35.0,
                 "right_calf": 35.0,
+                "shoulders": 50.0,
+                "trunk": 50.0,
+                "pelvis": 30.0,
             }
         }
     }
@@ -208,6 +211,9 @@ class BodyMeasurementRead(BodyMeasurementBase):
                 "right_leg": 50.0,
                 "left_calf": 35.0,
                 "right_calf": 35.0,
+                "shoulders": 50.0,
+                "trunk": 50.0,
+                "pelvis": 30.0,
             }
         },
     }
