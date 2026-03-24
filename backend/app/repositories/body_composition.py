@@ -289,7 +289,7 @@ async def get_body_composition_by_user_id(
 
 
 async def create_body_composition(
-    db: AsyncSession, body_composition: BodyCompositionCreate, id_user: int
+    db: AsyncSession, body_composition: BodyCompositionCreate
 ) -> BodyComposition:
     """
     Create a new body composition.
@@ -312,7 +312,7 @@ async def create_body_composition(
             )
 
         # Collect user information for estimation
-        user_record = await get_user_by_id(db, id_user)
+        user_record = await get_user_by_id(db, body_composition.id_user)
 
         age = await calculate_age(
             user_record.date_of_birth, measurement_record.measure_date
@@ -351,11 +351,26 @@ async def create_body_composition(
         if body_composition.muscle_percentage is None:
             body_composition.muscle_percentage = (
                 await muscle_percentage_formula(
-                    db, user_record, measurement_record, body_composition.weight
+                    user_record,
+                    measurement_record,
+                    age,
+                    body_composition.weight,
                 )
             )
             body_composition.is_muscle_estimated = True
 
+    if any(
+        [
+            body_composition.fat_percentage is None,
+            body_composition.muscle_percentage is None,
+            body_composition.bone_percentage is None,
+            body_composition.water_percentage is None,
+        ]
+    ):
+        raise ValueError(
+            "Insufficient data to create body composition. "
+            "Either provide measurements for estimation or specify all percentages."
+        )
     kg_data = {}
     kg_data["fat_kg"] = (
         body_composition.weight * body_composition.fat_percentage
@@ -374,7 +389,7 @@ async def create_body_composition(
         **body_composition.model_dump(),
         **kg_data,
     )
-    print(new_body_composition.__dict__)
+
     db.add(new_body_composition)
     await db.commit()
     await db.refresh(new_body_composition)
