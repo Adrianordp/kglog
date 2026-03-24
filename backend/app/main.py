@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 
 from app.core.version import get_version
-from app.routers import body_measurements, user
+from app.routers import body_composition, body_measurements, user
 
 app = FastAPI(
     title="Kg-Log API",
@@ -17,6 +17,10 @@ app = FastAPI(
         {
             "name": "body_measurements",
             "description": "Operations related to body measurements management",
+        },
+        {
+            "name": "body_composition",
+            "description": "Operations related to body composition management",
         },
     ],
 )
@@ -36,3 +40,4 @@ def read_health():
 
 app.include_router(user.router)
 app.include_router(body_measurements.router)
+app.include_router(body_composition.router)
