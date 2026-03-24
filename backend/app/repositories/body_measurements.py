@@ -50,13 +50,12 @@ async def get_body_measurement_by_user_id(
 
 
 async def create_body_measurement(
-    db: AsyncSession, body_measurement: BodyMeasurementCreate, id_user: int
+    db: AsyncSession, body_measurement: BodyMeasurementCreate
 ) -> BodyMeasurements:
     """
     Create a new body measurement.
     """
     new_body_measurement = BodyMeasurements(
-        id_user=id_user,
         **body_measurement.model_dump(),
     )
     db.add(new_body_measurement)
