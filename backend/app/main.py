@@ -1,9 +1,11 @@
 from fastapi import FastAPI
 
+from app.core.version import get_version
+
 app = FastAPI(
     title="Kg-Log API",
     description="API for Kg-Log application",
-    version="0.1.0",
+    version=get_version(),
     swagger_ui_init_oauth={"usePkceWithAuthorizationCodeGrant": False},
     swagger_ui_parameters={"docExpansion": "none"},
 )
