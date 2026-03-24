@@ -9,6 +9,12 @@ app = FastAPI(
     version=get_version(),
     swagger_ui_init_oauth={"usePkceWithAuthorizationCodeGrant": False},
     swagger_ui_parameters={"docExpansion": "none"},
+    openapi_tags=[
+        {
+            "name": "users",
+            "description": "Operations related to user management",
+        },
+    ],
 )
 
 
@@ -24,4 +30,8 @@ def read_health():
     return {"status": "ok"}
 
 
-app.include_router(user.router)
+app.include_router(
+    user.router,
+    prefix="/users",
+    tags=["users"],
+)
