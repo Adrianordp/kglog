@@ -39,8 +39,10 @@ async def create_user(db: AsyncSession, user: UserCreate) -> User:
     """
     Create a new user.
     """
-    user_data = user.model_dump()
-    user_data["password_hash"] = get_password_hash(user_data.pop("password"))
+    user_data = user.model_dump(exclude={"password"})
+    user_data["password_hash"] = get_password_hash(
+        user.password.get_secret_value()
+    )
     new_user = User(**user_data)
     db.add(new_user)
     await db.commit()
@@ -60,10 +62,12 @@ async def update_user(db: AsyncSession, id: int, user: UserUpdate) -> User:
     if not query_element:
         raise ValueError(f"User with id {id} not found")
 
-    update_data = user.model_dump(exclude_unset=True, exclude_none=True)
-    if "password" in update_data:
+    update_data = user.model_dump(
+        exclude={"password"}, exclude_unset=True, exclude_none=True
+    )
+    if user.password is not None:
         update_data["password_hash"] = get_password_hash(
-            update_data.pop("password")
+            user.password.get_secret_value()
         )
     for key, value in update_data.items():
         setattr(query_element, key, value)
