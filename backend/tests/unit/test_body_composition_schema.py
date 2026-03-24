@@ -67,11 +67,11 @@ def test_body_composition_create_minimal():
     body_composition_create = BodyCompositionCreate(**data)
 
     assert body_composition_create.id_user == data["id_user"]
-    assert body_composition_create.id_measurements is None
     assert body_composition_create.measure_date == datetime.fromisoformat(
         data["measure_date"]
     )
     assert body_composition_create.weight == data["weight"]
+    assert body_composition_create.id_measurements is None
     assert body_composition_create.fat_percentage is None
     assert body_composition_create.muscle_percentage is None
     assert body_composition_create.bone_percentage is None
