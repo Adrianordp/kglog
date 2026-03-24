@@ -30,8 +30,4 @@ def read_health():
     return {"status": "ok"}
 
 
-app.include_router(
-    user.router,
-    prefix="/users",
-    tags=["users"],
-)
+app.include_router(user.router)
