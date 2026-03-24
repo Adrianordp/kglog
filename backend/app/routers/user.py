@@ -32,10 +32,6 @@ async def create_user_endpoint(
 ) -> UserRead:
     """
     Create a new user with the provided information.
-
-    - **username**: Unique username for the user
-    - **email**: User's email address
-    - **password**: User's password (will be hashed before storing)
     """
     return await create_user(db, user)
 
