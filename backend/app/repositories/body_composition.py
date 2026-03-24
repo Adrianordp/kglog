@@ -275,6 +275,19 @@ async def get_body_compositions(db: AsyncSession) -> list[BodyCompositionRead]:
     return result
 
 
+async def get_body_composition_by_id(
+    db: AsyncSession, id: int
+) -> BodyCompositionRead:
+    """
+    Get body composition by ID.
+    """
+    stmt = select(BodyComposition).where(BodyComposition.id == id)
+    query = await db.execute(stmt)
+    result = query.scalar_one_or_none()
+
+    return result
+
+
 async def get_body_composition_by_user_id(
     db: AsyncSession, id_user: int
 ) -> list[BodyComposition]:
