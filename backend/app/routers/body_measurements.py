@@ -7,6 +7,7 @@ from app.core.database import get_async_db
 from app.repositories.body_measurements import (
     create_body_measurement,
     get_body_measurement_by_id,
+    get_body_measurement_by_user_id,
     get_body_measurements,
     update_body_measurement,
 )
@@ -88,6 +89,28 @@ async def get_body_measurement_by_id_endpoint(
         )
 
     return body_measurement
+
+
+@router.get(
+    "/user/{user_id}",
+    response_model=List[BodyMeasurementRead],
+    summary="Get body measurements by user ID",
+    description="Retrieve a list of body measurements for a specific user by their unique ID.",
+    response_description="List of body measurements for the specified user",
+    responses={
+        200: {
+            "description": "List of body measurements for the specified user retrieved successfully"
+        },
+    },
+)
+async def get_body_measurements_by_user_id_endpoint(
+    user_id: int,
+    db: Annotated[AsyncSession, Depends(get_async_db)],
+) -> List[BodyMeasurementRead]:
+    """
+    Retrieve a list of body measurements for a specific user by their unique ID.
+    """
+    return await get_body_measurement_by_user_id(db, user_id)
 
 
 @router.put(
