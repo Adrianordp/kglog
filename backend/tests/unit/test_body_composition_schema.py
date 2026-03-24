@@ -57,6 +57,33 @@ def test_body_composition_create():
     )
 
 
+def test_body_composition_create_minimal():
+    data = {
+        "id_user": 1,
+        "measure_date": "2024-01-01T00:00:00+00:00",
+        "weight": 70.0,
+    }
+
+    body_composition_create = BodyCompositionCreate(**data)
+
+    assert body_composition_create.id_user == data["id_user"]
+    assert body_composition_create.id_measurements is None
+    assert body_composition_create.measure_date == datetime.fromisoformat(
+        data["measure_date"]
+    )
+    assert body_composition_create.weight == data["weight"]
+    assert body_composition_create.fat_percentage is None
+    assert body_composition_create.muscle_percentage is None
+    assert body_composition_create.bone_percentage is None
+    assert body_composition_create.water_percentage is None
+    assert body_composition_create.visceral_fat is None
+    assert body_composition_create.is_fat_estimated is True
+    assert body_composition_create.is_muscle_estimated is True
+    assert body_composition_create.is_bone_estimated is True
+    assert body_composition_create.is_water_estimated is True
+    assert body_composition_create.is_visceral_fat_estimated is True
+
+
 def test_body_composition_read():
     data = {
         "id": 1,
