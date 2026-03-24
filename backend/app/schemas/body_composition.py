@@ -55,25 +55,25 @@ class BodyCompositionCreate(BodyCompositionBase):
     )
 
     fat_percentage: Optional[float] = Field(
-        ...,
+        None,
         description="Body fat percentage as a decimal (e.g., 0.15 for 15%)",
         gt=0.0,
         lt=1.0,
     )
     muscle_percentage: Optional[float] = Field(
-        ...,
+        None,
         description="Muscle mass percentage as a decimal (e.g., 0.40 for 40%)",
         gt=0.0,
         lt=1.0,
     )
     bone_percentage: Optional[float] = Field(
-        ...,
+        None,
         description="Bone mass percentage as a decimal (e.g., 0.05 for 5%)",
         gt=0.0,
         lt=1.0,
     )
     water_percentage: Optional[float] = Field(
-        ...,
+        None,
         description="Water percentage as a decimal (e.g., 0.60 for 60%)",
         gt=0.0,
         lt=1.0,
