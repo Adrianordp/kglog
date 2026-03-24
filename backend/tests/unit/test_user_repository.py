@@ -12,7 +12,7 @@ async def test_repo_create_user(async_session: AsyncSession):
     create_data = UserCreate(
         username="Test User",
         email="testuser@example.com",
-        password_hash="a_secure_hashed_password",
+        password="a_secure_password",
         date_of_birth="1990-01-01",
         gender="MALE",
     )
@@ -23,7 +23,7 @@ async def test_repo_create_user(async_session: AsyncSession):
     assert created_user.username == "Test User"
     assert created_user.email == "testuser@example.com"
     assert created_user.password_hash is not None
-    assert created_user.password_hash != ""
+    assert created_user.password_hash != "a_secure_password"
     assert created_user.date_of_birth == date.fromisoformat("1990-01-01")
     assert created_user.gender == Gender.MALE
 
@@ -33,7 +33,7 @@ async def test_repo_get_all_users(async_session: AsyncSession):
     create_data = UserCreate(
         username="Test User",
         email="testuser@example.com",
-        password_hash="a_secure_hashed_password",
+        password="a_secure_password",
         date_of_birth="1990-01-01",
         gender="MALE",
     )
@@ -49,7 +49,7 @@ async def test_repo_get_user_by_id(async_session: AsyncSession):
     create_data = UserCreate(
         username="Test User",
         email="testuser@example.com",
-        password_hash="a_secure_hashed_password",
+        password="a_secure_password",
         date_of_birth="1990-01-01",
         gender="MALE",
     )
@@ -66,7 +66,7 @@ async def test_repo_update_user(async_session: AsyncSession):
     create_data = UserCreate(
         username="Test User",
         email="testuser@example.com",
-        password_hash="a_secure_hashed_password",
+        password="a_secure_password",
         date_of_birth="1990-01-01",
         gender="MALE",
     )
@@ -76,7 +76,7 @@ async def test_repo_update_user(async_session: AsyncSession):
     update_data = UserUpdate(
         username="Updated User",
         email="updateduser@example.com",
-        password_hash="a_new_secure_hashed_password",
+        password="a_new_secure_password",
         date_of_birth="1991-01-01",
         gender="FEMALE",
     )
@@ -89,7 +89,7 @@ async def test_repo_update_user(async_session: AsyncSession):
     assert updated_user.username == "Updated User"
     assert updated_user.email == "updateduser@example.com"
     assert updated_user.password_hash is not None
-    assert updated_user.password_hash != "a_secure_hashed_password"
+    assert updated_user.password_hash != "a_new_secure_password"
     assert old_password_hash != updated_user.password_hash
     assert updated_user.date_of_birth == date.fromisoformat("1991-01-01")
     assert updated_user.gender == Gender.FEMALE
