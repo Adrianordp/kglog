@@ -1,0 +1,19 @@
+services:
+  db:
+    image: postgres:15
+    environment:
+      POSTGRES_USER: kglog
+      POSTGRES_PASSWORD: kglog
+      POSTGRES_DB: kglog
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+    networks:
+      - kglog_network
+
+volumes:
+  pg_data:
+
+
+networks:
+  kglog_network:
+    driver: bridge
