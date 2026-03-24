@@ -13,11 +13,6 @@ class BodyCompositionBase(BaseModel):
     Base schema for body composition.
     """
 
-    id_measurements: Optional[int] = Field(
-        None,
-        description="ID of the measurements used for estimation, if applicable",
-    )
-
     measure_date: datetime = Field(
         ..., description="Date of measurement in YYYY-MM-DDTHH:MM:SS format"
     )
@@ -51,7 +46,11 @@ class BodyCompositionCreate(BodyCompositionBase):
 
     id_user: int = Field(
         ...,
-        description="ID of the user to whom the body composition record belongs",
+        description="Identifier of the user to whom the body composition record belongs",
+    )
+    id_measurements: Optional[int] = Field(
+        None,
+        description="ID of the measurements used for estimation, if applicable",
     )
 
     fat_percentage: Optional[float] = Field(
@@ -110,11 +109,6 @@ class BodyCompositionUpdate(BaseModel):
     """
     Schema for updating an existing body composition record.
     """
-
-    id_measurements: Optional[int] = Field(
-        None,
-        description="ID of the measurements used for estimation, if applicable",
-    )
 
     measure_date: Optional[datetime] = Field(
         None, description="Date of measurement in YYYY-MM-DDTHH:MM:SS format"
@@ -175,7 +169,6 @@ class BodyCompositionUpdate(BaseModel):
     model_config = {
         "json_schema_extra": {
             "example": {
-                "id_measurements": 1,
                 "measure_date": "2024-01-01T08:00:00",
                 "weight": 70.0,
                 "fat_percentage": 0.15,
