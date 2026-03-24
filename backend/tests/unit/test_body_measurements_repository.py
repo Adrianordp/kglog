@@ -11,6 +11,7 @@ from app.schemas.body_measurements import (
 @pytest.mark.asyncio
 async def test_repo_create_measurements(async_session: AsyncSession):
     create_data = BodyMeasurementCreate(
+        id_user=1,
         measure_date="2024-01-01T00:00:00",
         height=180.0,
         neck=40.0,
@@ -32,7 +33,7 @@ async def test_repo_create_measurements(async_session: AsyncSession):
     )
 
     created_measurement = await measurements_repo.create_body_measurement(
-        async_session, create_data, id_user=1
+        async_session, create_data
     )
 
     assert created_measurement.id is not None
@@ -41,6 +42,7 @@ async def test_repo_create_measurements(async_session: AsyncSession):
 @pytest.mark.asyncio
 async def test_repo_get_all_measurements(async_session: AsyncSession):
     create_data = BodyMeasurementCreate(
+        id_user=1,
         measure_date="2024-01-01T00:00:00",
         height=180.0,
         neck=40.0,
@@ -60,9 +62,7 @@ async def test_repo_get_all_measurements(async_session: AsyncSession):
         trunk=60.0,
         pelvis=40.0,
     )
-    await measurements_repo.create_body_measurement(
-        async_session, create_data, id_user=1
-    )
+    await measurements_repo.create_body_measurement(async_session, create_data)
 
     measurements = await measurements_repo.get_body_measurements(async_session)
 
@@ -72,6 +72,7 @@ async def test_repo_get_all_measurements(async_session: AsyncSession):
 @pytest.mark.asyncio
 async def test_repo_get_measurements_by_user_id(async_session: AsyncSession):
     create_data = BodyMeasurementCreate(
+        id_user=1,
         measure_date="2024-01-01T00:00:00",
         height=180.0,
         neck=40.0,
@@ -91,9 +92,7 @@ async def test_repo_get_measurements_by_user_id(async_session: AsyncSession):
         trunk=60.0,
         pelvis=40.0,
     )
-    await measurements_repo.create_body_measurement(
-        async_session, create_data, id_user=1
-    )
+    await measurements_repo.create_body_measurement(async_session, create_data)
 
     measurements = await measurements_repo.get_body_measurement_by_user_id(
         async_session, id_user=1
@@ -106,6 +105,7 @@ async def test_repo_get_measurements_by_user_id(async_session: AsyncSession):
 @pytest.mark.asyncio
 async def test_repo_get_measurement_by_id(async_session: AsyncSession):
     create_data = BodyMeasurementCreate(
+        id_user=1,
         measure_date="2024-01-01T00:00:00",
         height=180.0,
         neck=40.0,
@@ -126,7 +126,7 @@ async def test_repo_get_measurement_by_id(async_session: AsyncSession):
         pelvis=40.0,
     )
     created_measurement = await measurements_repo.create_body_measurement(
-        async_session, create_data, id_user=1
+        async_session, create_data
     )
 
     measurement = await measurements_repo.get_body_measurement_by_id(
@@ -141,6 +141,7 @@ async def test_repo_get_measurement_by_id(async_session: AsyncSession):
 @pytest.mark.asyncio
 async def test_repo_update_measurement(async_session: AsyncSession):
     create_data = BodyMeasurementCreate(
+        id_user=1,
         measure_date="2024-01-01T00:00:00",
         height=180.0,
         neck=40.0,
@@ -161,7 +162,7 @@ async def test_repo_update_measurement(async_session: AsyncSession):
         pelvis=40.0,
     )
     created_measurement = await measurements_repo.create_body_measurement(
-        async_session, create_data, id_user=1
+        async_session, create_data
     )
     update_data = BodyMeasurementUpdate(height=185.0)
 
