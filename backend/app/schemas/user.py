@@ -5,7 +5,7 @@ Schemas for users in app.models.user.
 from datetime import date, datetime
 from typing import Optional
 
-from pydantic import BaseModel, EmailStr, Field
+from pydantic import BaseModel, EmailStr, Field, Secret
 
 from app.models.user import Gender
 
@@ -32,7 +32,9 @@ class UserCreate(UserBase):
     Schema for creating a new user.
     """
 
-    password_hash: str = Field(..., description="Hashed password for the user")
+    password: Secret = Field(
+        ..., description="Plain text password for the user", min_length=6
+    )
 
     model_config = {
         "json_schema_extra": {
@@ -41,7 +43,7 @@ class UserCreate(UserBase):
                 "email": "john_doe@example.com",
                 "date_of_birth": "1990-01-01",
                 "gender": "MALE",
-                "password_hash": "$2b$12$KIXQ1Z5e5s5s5s5s5s5sO5u5u5u5u5u5u",
+                "password": "mysecretpassword",
             }
         }
     }
@@ -64,8 +66,8 @@ class UserUpdate(BaseModel):
     gender: Optional[Gender] = Field(
         None, description="Gender of the user (e.g., MALE, FEMALE, OTHER)"
     )
-    password_hash: Optional[str] = Field(
-        None, description="Hashed password for the user"
+    password: Optional[Secret] = Field(
+        None, description="Plain text password for the user", min_length=6
     )
 
     model_config = {
@@ -75,7 +77,7 @@ class UserUpdate(BaseModel):
                 "email": "john_doe_updated@example.com",
                 "date_of_birth": "1990-01-01",
                 "gender": "MALE",
-                "password_hash": "$2b$12$KIXQ1Z5e5s5s5s5s5s5sO5u5u5u5u5u5u",
+                "password": "mynewsecretpassword",
             }
         }
     }
