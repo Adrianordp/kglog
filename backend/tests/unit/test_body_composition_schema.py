@@ -141,7 +141,6 @@ def test_body_composition_read():
 
 def test_body_composition_update():
     data = {
-        "id_measurements": 1,
         "measure_date": "2024-01-02T00:00:00+00:00",
         "weight": 71.0,
         "fat_percentage": 0.14,
@@ -158,7 +157,6 @@ def test_body_composition_update():
 
     body_composition_update = BodyCompositionUpdate(**data)
 
-    assert body_composition_update.id_measurements == data["id_measurements"]
     assert body_composition_update.measure_date == datetime.fromisoformat(
         data["measure_date"]
     )
