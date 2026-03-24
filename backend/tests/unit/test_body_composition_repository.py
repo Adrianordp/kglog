@@ -14,7 +14,9 @@ from app.schemas.body_composition import (
 
 
 @pytest_asyncio.fixture
-async def setup_user_and_measurements(async_session: AsyncSession):
+async def setup_user_and_measurements(
+    async_session: AsyncSession,
+) -> tuple[User, BodyMeasurements]:
     # Create a user
     user = User(
         username="testuser",
@@ -77,6 +79,44 @@ async def test_repo_create_composition(
     )
 
     assert created_measurement.id is not None
+
+
+@pytest.mark.asyncio
+async def test_repo_create_composition_minimal(
+    async_session: AsyncSession, setup_user_and_measurements
+):
+    user, measurements = setup_user_and_measurements
+    create_data = BodyCompositionCreate(
+        id_user=user.id,
+        id_measurements=measurements.id,
+        measure_date="2024-01-01T00:00:00",
+        weight=80,
+    )
+
+    created_measurement = await composition_repo.create_body_composition(
+        async_session, create_data, id_user=user.id
+    )
+
+    assert created_measurement.id is not None
+
+
+@pytest.mark.asyncio
+async def test_repo_create_missing_percentages(
+    async_session: AsyncSession, setup_user_and_measurements
+):
+    user, _ = setup_user_and_measurements
+    create_data = BodyCompositionCreate(
+        id_user=user.id,
+        measure_date="2024-01-01T00:00:00",
+        weight=80,
+    )
+
+    with pytest.raises(
+        ValueError, match="Insufficient data to create body composition"
+    ):
+        await composition_repo.create_body_composition(
+            async_session, create_data, id_user=user.id
+        )
 
 
 @pytest.mark.asyncio
