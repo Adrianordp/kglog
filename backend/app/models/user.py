@@ -12,8 +12,9 @@ This model represents a user, including:
 This model is used to store and manage user information
 """
 
-from datetime import date, datetime, timezone
+from datetime import date, datetime
 from enum import Enum as PyEnum
+from zoneinfo import ZoneInfo
 
 from sqlalchemy import Date, DateTime, Enum, Integer, String
 from sqlalchemy.orm import Mapped, mapped_column, relationship
@@ -43,13 +44,13 @@ class User(Base):
     gender: Mapped[Gender] = mapped_column(Enum(Gender))
 
     created_at: Mapped[datetime] = mapped_column(
-        DateTime(timezone=True),
-        default=lambda: datetime.now(timezone.utc),
+        DateTime(),
+        default=lambda: datetime.now(ZoneInfo("America/Manaus")),
     )
     updated_at: Mapped[datetime] = mapped_column(
-        DateTime(timezone=True),
-        default=lambda: datetime.now(timezone.utc),
-        onupdate=lambda: datetime.now(timezone.utc),
+        DateTime(),
+        default=lambda: datetime.now(ZoneInfo("America/Manaus")),
+        onupdate=lambda: datetime.now(ZoneInfo("America/Manaus")),
     )
 
     body_compositions: Mapped[list["BodyComposition"]] = relationship(
