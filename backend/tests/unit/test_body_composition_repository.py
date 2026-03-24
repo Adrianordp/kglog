@@ -75,7 +75,7 @@ async def test_repo_create_composition(
     )
 
     created_measurement = await composition_repo.create_body_composition(
-        async_session, create_data, id_user=user.id
+        async_session, create_data
     )
 
     assert created_measurement.id is not None
@@ -94,7 +94,7 @@ async def test_repo_create_composition_minimal(
     )
 
     created_measurement = await composition_repo.create_body_composition(
-        async_session, create_data, id_user=user.id
+        async_session, create_data
     )
 
     assert created_measurement.id is not None
@@ -115,7 +115,7 @@ async def test_repo_create_missing_percentages(
         ValueError, match="Insufficient data to create body composition"
     ):
         await composition_repo.create_body_composition(
-            async_session, create_data, id_user=user.id
+            async_session, create_data
         )
 
 
@@ -134,9 +134,7 @@ async def test_repo_get_all_compositions(
         bone_percentage=0.05,
         water_percentage=0.35,
     )
-    await composition_repo.create_body_composition(
-        async_session, create_data, id_user=user.id
-    )
+    await composition_repo.create_body_composition(async_session, create_data)
 
     measurements = await composition_repo.get_body_compositions(async_session)
 
@@ -159,9 +157,7 @@ async def test_repo_get_compositions_by_user_id(
         bone_percentage=0.05,
         water_percentage=0.35,
     )
-    await composition_repo.create_body_composition(
-        async_session, create_data, id_user=user.id
-    )
+    await composition_repo.create_body_composition(async_session, create_data)
     measurements = await composition_repo.get_body_composition_by_user_id(
         async_session, id_user=user.id
     )
@@ -186,7 +182,7 @@ async def test_repo_update_composition(
         water_percentage=0.35,
     )
     created_composition = await composition_repo.create_body_composition(
-        async_session, create_data, id_user=user.id
+        async_session, create_data
     )
     update_data = BodyCompositionUpdate(
         weight=85,
