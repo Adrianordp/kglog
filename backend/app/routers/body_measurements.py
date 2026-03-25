@@ -6,6 +6,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.core.database import get_async_db
 from app.repositories.body_measurements import (
     create_body_measurement,
+    delete_body_measurement,
     get_body_measurement_by_id,
     get_body_measurement_by_user_id,
     get_body_measurements,
@@ -138,5 +139,28 @@ async def update_body_measurement_endpoint(
             db, id, body_measurement
         )
         return updated_body_measurement
+    except ValueError as e:
+        raise HTTPException(status_code=404, detail=str(e))
+
+
+@router.delete(
+    "/{id}",
+    status_code=status.HTTP_204_NO_CONTENT,
+    summary="Delete a body measurement",
+    description="Delete an existing body measurement by its unique ID.",
+    responses={
+        204: {"description": "Body measurement deleted successfully"},
+        404: {"description": "Body measurement not found"},
+    },
+)
+async def delete_body_measurement_endpoint(
+    id: int,
+    db: Annotated[AsyncSession, Depends(get_async_db)],
+) -> None:
+    """
+    Delete an existing body measurement by its unique ID.
+    """
+    try:
+        await delete_body_measurement(db, id)
     except ValueError as e:
         raise HTTPException(status_code=404, detail=str(e))
