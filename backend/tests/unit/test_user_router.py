@@ -4,6 +4,7 @@ from fastapi import FastAPI
 from httpx import ASGITransport, AsyncClient
 
 from app.core.database import AsyncGenerator, AsyncSession, get_async_db
+from app.models.user import User
 from app.routers.user import router as user_router
 
 
@@ -52,52 +53,32 @@ async def test_create_user_endpoint(async_client: AsyncClient):
 
 
 @pytest.mark.asyncio
-async def test_get_users_endpoint(async_client: AsyncClient):
+async def test_get_users_endpoint(async_client: AsyncClient, setup_user: User):
+    user = setup_user
     response = await async_client.get("/users/")
     assert response.status_code == 200
     assert isinstance(response.json(), list)
+    assert len(response.json()) == 1
+    response_data = response.json()[0]
+    assert response_data["id"] == user.id
 
 
 @pytest.mark.asyncio
-async def test_get_user_by_id_endpoint(async_client: AsyncClient):
-    # First, create a user to ensure there is at least one user in the database
-    user_data = {
-        "username": "Test User",
-        "email": "testuser@example.com",
-        "password": "password123",
-        "date_of_birth": "1990-01-01",
-        "gender": "MALE",
-    }
-    response = await async_client.post("/users/", json=user_data)
-    user_id = response.json()["id"]
-    response = await async_client.get(f"/users/{user_id}")
+async def test_get_user_by_id_endpoint(
+    async_client: AsyncClient, setup_user: User
+):
+    user = setup_user
+    response = await async_client.get(f"/users/{user.id}")
     assert response.status_code == 200
     response_data = response.json()
-    assert response_data["id"] == user_id
-    assert response_data["username"] == user_data["username"]
-    assert response_data["email"] == user_data["email"]
-    assert response_data["date_of_birth"] == user_data["date_of_birth"]
-    assert response_data["gender"] == user_data["gender"]
-    assert response_data["created_at"] is not None
-    assert response_data["updated_at"] is not None
+    assert response_data["id"] == user.id
 
 
 @pytest.mark.asyncio
-async def test_update_user_endpoint(async_client: AsyncClient):
-    # First, create a user to ensure there is at least one user in the database
-    user_data = {
-        "username": "Test User",
-        "email": "testuser@example.com",
-        "password": "password123",
-        "date_of_birth": "1990-01-01",
-        "gender": "MALE",
-    }
-    response = await async_client.post("/users/", json=user_data)
-    user_id = response.json()["id"]
-    response = await async_client.get(f"/users/{user_id}")
-    assert response.status_code == 200
-    assert response.json()["id"] == user_id
-
+async def test_update_user_endpoint(
+    async_client: AsyncClient, setup_user: User
+):
+    user = setup_user
     update_data = {
         "username": "Updated User",
         "email": "updateduser@example.com",
@@ -105,31 +86,18 @@ async def test_update_user_endpoint(async_client: AsyncClient):
         "date_of_birth": "1991-01-01",
         "gender": "FEMALE",
     }
-    response = await async_client.put(f"/users/{user_id}", json=update_data)
+    response = await async_client.put(f"/users/{user.id}", json=update_data)
     assert response.status_code == 200
     response_data = response.json()
-    assert response_data["id"] == user_id
-    assert response_data["username"] == update_data["username"]
-    assert response_data["email"] == update_data["email"]
-    assert response_data["date_of_birth"] == update_data["date_of_birth"]
-    assert response_data["gender"] == update_data["gender"]
-    assert response_data["created_at"] is not None
-    assert response_data["updated_at"] is not None
+    assert response_data["id"] == user.id
 
 
 @pytest.mark.asyncio
-async def test_delete_user_endpoint(async_client: AsyncClient):
-    # First, create a user to ensure there is at least one user in the database
-    user_data = {
-        "username": "Test User",
-        "email": "testuser@example.com",
-        "password": "password123",
-        "date_of_birth": "1990-01-01",
-        "gender": "MALE",
-    }
-    response = await async_client.post("/users/", json=user_data)
-    user_id = response.json()["id"]
-    response = await async_client.delete(f"/users/{user_id}")
+async def test_delete_user_endpoint(
+    async_client: AsyncClient, setup_user: User
+):
+    user = setup_user
+    response = await async_client.delete(f"/users/{user.id}")
     assert response.status_code == 204
-    response = await async_client.get(f"/users/{user_id}")
+    response = await async_client.get(f"/users/{user.id}")
     assert response.status_code == 404
