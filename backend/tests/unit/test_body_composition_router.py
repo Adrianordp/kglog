@@ -211,3 +211,18 @@ async def test_update_body_composition_endpoint(
     assert response.status_code == 200
     response_data = response.json()
     assert response_data["weight"] == updated_body_composition_data["weight"]
+
+
+@pytest.mark.asyncio
+async def test_delete_body_composition_endpoint(
+    async_client: AsyncClient, setup_data
+):
+    _, _, body_composition = setup_data
+    response = await async_client.delete(
+        f"/body_composition/{body_composition.id}"
+    )
+    assert response.status_code == 204
+    response = await async_client.get(
+        f"/body_composition/{body_composition.id}"
+    )
+    assert response.status_code == 404
