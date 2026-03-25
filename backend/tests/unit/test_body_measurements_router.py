@@ -146,6 +146,39 @@ async def test_get_body_measurements_endpoint(async_client: AsyncClient):
 
 
 @pytest.mark.asyncio
+async def test_get_body_measurements_by_id_endpoint(
+    async_client: AsyncClient, setup_user_and_measurements
+):
+    user, measurements = setup_user_and_measurements
+    measurement_id = measurements.id
+    response = await async_client.get(f"/body_measurements/{measurement_id}")
+    assert response.status_code == 200
+    response_data = response.json()
+    assert response_data["id"] == measurement_id
+    assert response_data["id_user"] == user.id
+    assert (
+        response_data["measure_date"] == measurements.measure_date.isoformat()
+    )
+    assert response_data["height"] == measurements.height
+    assert response_data["neck"] == measurements.neck
+    assert response_data["neck_to_shoulder"] == measurements.neck_to_shoulder
+    assert response_data["sleeve"] == measurements.sleeve
+    assert response_data["bust"] == measurements.bust
+    assert response_data["left_arm"] == measurements.left_arm
+    assert response_data["right_arm"] == measurements.right_arm
+    assert response_data["waist"] == measurements.waist
+    assert response_data["hip"] == measurements.hip
+    assert response_data["inseam_to_ankle"] == measurements.inseam_to_ankle
+    assert response_data["left_leg"] == measurements.left_leg
+    assert response_data["right_leg"] == measurements.right_leg
+    assert response_data["left_calf"] == measurements.left_calf
+    assert response_data["right_calf"] == measurements.right_calf
+    assert response_data["shoulders"] == measurements.shoulders
+    assert response_data["trunk"] == measurements.trunk
+    assert response_data["pelvis"] == measurements.pelvis
+
+
+@pytest.mark.asyncio
 async def test_get_body_measurements_by_user_id_endpoint(
     async_client: AsyncClient, setup_user_and_measurements
 ):
@@ -154,3 +187,15 @@ async def test_get_body_measurements_by_user_id_endpoint(
     response = await async_client.get(f"/body_measurements/user/{user_id}")
     assert response.status_code == 200
     assert isinstance(response.json(), list)
+
+
+@pytest.mark.asyncio
+async def test_delete_body_measurements_endpoint(
+    async_client: AsyncClient, setup_user_and_measurements
+):
+    _, measurements = setup_user_and_measurements
+    measurement_id = measurements.id
+    response = await async_client.delete(f"/body_measurements/{measurement_id}")
+    assert response.status_code == 204
+    response = await async_client.get(f"/body_measurements/{measurement_id}")
+    assert response.status_code == 404
