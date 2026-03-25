@@ -6,6 +6,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.core.database import get_async_db
 from app.repositories.user import (
     create_user,
+    delete_user,
     get_user_by_id,
     get_users,
     update_user,
@@ -104,3 +105,25 @@ async def update_user_endpoint(
     - **password**: User's password (will be hashed before storing)
     """
     return await update_user(db, id, user)
+
+
+@router.delete(
+    "/{id}",
+    status_code=status.HTTP_204_NO_CONTENT,
+    summary="Delete a user",
+    description="Delete a user by their unique ID.",
+    responses={
+        204: {"description": "User deleted successfully"},
+        404: {"description": "User not found"},
+    },
+)
+async def delete_user_endpoint(
+    db: Annotated[AsyncSession, Depends(get_async_db)], id: int
+) -> None:
+    """
+    Delete a user by their unique ID.
+    """
+    try:
+        await delete_user(db, id)
+    except ValueError as e:
+        raise HTTPException(status_code=404, detail=str(e))
