@@ -76,3 +76,18 @@ async def update_user(db: AsyncSession, id: int, user: UserUpdate) -> User:
     await db.refresh(query_element)
 
     return query_element
+
+
+async def delete_user(db: AsyncSession, id: int) -> None:
+    """
+    Delete a user by ID.
+    """
+    stmt = select(User).where(User.id == id)
+    query = await db.execute(stmt)
+    query_element = query.scalars().first()
+
+    if not query_element:
+        raise ValueError(f"User with id {id} not found")
+
+    await db.delete(query_element)
+    await db.commit()
