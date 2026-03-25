@@ -93,3 +93,20 @@ async def test_repo_update_user(async_session: AsyncSession):
     assert old_password_hash != updated_user.password_hash
     assert updated_user.date_of_birth == date.fromisoformat("1991-01-01")
     assert updated_user.gender == Gender.FEMALE
+
+
+@pytest.mark.asyncio
+async def test_repo_delete_user(async_session: AsyncSession):
+    create_data = UserCreate(
+        username="Test User",
+        email="testuser@example.com",
+        password="a_secure_password",
+        date_of_birth="1990-01-01",
+        gender="MALE",
+    )
+    created_user = await user_repo.create_user(async_session, create_data)
+
+    await user_repo.delete_user(async_session, created_user.id)
+
+    user = await user_repo.get_user_by_id(async_session, created_user.id)
+    assert user is None
