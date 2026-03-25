@@ -115,3 +115,21 @@ async def test_update_user_endpoint(async_client: AsyncClient):
     assert response_data["gender"] == update_data["gender"]
     assert response_data["created_at"] is not None
     assert response_data["updated_at"] is not None
+
+
+@pytest.mark.asyncio
+async def test_delete_user_endpoint(async_client: AsyncClient):
+    # First, create a user to ensure there is at least one user in the database
+    user_data = {
+        "username": "Test User",
+        "email": "testuser@example.com",
+        "password": "password123",
+        "date_of_birth": "1990-01-01",
+        "gender": "MALE",
+    }
+    response = await async_client.post("/users/", json=user_data)
+    user_id = response.json()["id"]
+    response = await async_client.delete(f"/users/{user_id}")
+    assert response.status_code == 204
+    response = await async_client.get(f"/users/{user_id}")
+    assert response.status_code == 404
