@@ -6,6 +6,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.core.database import get_async_db
 from app.repositories.body_composition import (
     create_body_composition,
+    delete_body_composition,
     get_body_composition_by_id,
     get_body_composition_by_user_id,
     get_body_compositions,
@@ -141,3 +142,26 @@ async def update_body_composition_endpoint(
         )
 
     return await update_body_composition(db, id, body_composition)
+
+
+@router.delete(
+    "/{id}",
+    status_code=status.HTTP_204_NO_CONTENT,
+    summary="Delete body composition",
+    description="Delete an existing body composition by its ID.",
+    responses={
+        204: {"description": "Body composition deleted successfully"},
+        404: {"description": "Body composition not found"},
+    },
+)
+async def delete_body_composition_endpoint(
+    id: int,
+    db: Annotated[AsyncSession, Depends(get_async_db)],
+) -> None:
+    """
+    Delete an existing body composition by its ID.
+    """
+    try:
+        await delete_body_composition(db, id)
+    except ValueError as e:
+        raise HTTPException(status_code=404, detail=str(e))
