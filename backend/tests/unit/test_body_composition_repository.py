@@ -143,6 +143,34 @@ async def test_repo_get_all_compositions(
 
 
 @pytest.mark.asyncio
+async def test_repo_get_composition_by_id(
+    async_session: AsyncSession, setup_user_and_measurements
+):
+    user, measurements = setup_user_and_measurements
+    create_data = BodyCompositionCreate(
+        id_user=user.id,
+        id_measurements=measurements.id,
+        measure_date="2024-01-01T00:00:00",
+        weight=80,
+        fat_percentage=0.20,
+        muscle_percentage=0.40,
+        bone_percentage=0.05,
+        water_percentage=0.35,
+    )
+    created_composition = await composition_repo.create_body_composition(
+        async_session, create_data
+    )
+
+    composition = await composition_repo.get_body_composition_by_id(
+        async_session, id=created_composition.id
+    )
+
+    assert composition is not None
+    assert composition.id == created_composition.id
+    assert composition.id_user == user.id
+
+
+@pytest.mark.asyncio
 async def test_repo_get_compositions_by_user_id(
     async_session: AsyncSession, setup_user_and_measurements
 ):
@@ -201,3 +229,32 @@ async def test_repo_update_composition(
     assert updated_composition.muscle_percentage == 0.38
     assert updated_composition.bone_percentage == 0.06
     assert updated_composition.water_percentage == 0.32
+
+
+@pytest.mark.asyncio
+async def test_repo_delete_composition(
+    async_session: AsyncSession, setup_user_and_measurements
+):
+    user, measurements = setup_user_and_measurements
+    create_data = BodyCompositionCreate(
+        id_user=user.id,
+        id_measurements=measurements.id,
+        measure_date="2024-01-01T00:00:00",
+        weight=80,
+        fat_percentage=0.20,
+        muscle_percentage=0.40,
+        bone_percentage=0.05,
+        water_percentage=0.35,
+    )
+    created_composition = await composition_repo.create_body_composition(
+        async_session, create_data
+    )
+
+    await composition_repo.delete_body_composition(
+        async_session, id=created_composition.id
+    )
+
+    composition = await composition_repo.get_body_composition_by_id(
+        async_session, id=created_composition.id
+    )
+    assert composition is None
