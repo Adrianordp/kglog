@@ -80,9 +80,15 @@ class BodyMeasurementCreate(BodyMeasurementBase):
     Schema for creating a new body measurement.
     """
 
+    id_user: int = Field(
+        ...,
+        description="Identifier of the user to whom the measurement belongs",
+    )
+
     model_config = {
         "json_schema_extra": {
             "example": {
+                "id_user": 1,
                 "measure_date": "2024-01-01T00:00:00",
                 "height": 175.0,
                 "neck": 40.0,
@@ -98,6 +104,9 @@ class BodyMeasurementCreate(BodyMeasurementBase):
                 "right_leg": 50.0,
                 "left_calf": 35.0,
                 "right_calf": 35.0,
+                "shoulders": 50.0,
+                "trunk": 50.0,
+                "pelvis": 30.0,
             }
         }
     }
@@ -208,6 +217,9 @@ class BodyMeasurementRead(BodyMeasurementBase):
                 "right_leg": 50.0,
                 "left_calf": 35.0,
                 "right_calf": 35.0,
+                "shoulders": 50.0,
+                "trunk": 50.0,
+                "pelvis": 30.0,
             }
         },
     }

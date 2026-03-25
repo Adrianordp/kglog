@@ -44,7 +44,9 @@ class BodyMeasurements(Base):
         Integer, primary_key=True, autoincrement=True
     )
 
-    id_user: Mapped[int] = mapped_column(ForeignKey("users.id"))
+    id_user: Mapped[int] = mapped_column(
+        ForeignKey("users.id", ondelete="CASCADE")
+    )
 
     measure_date: Mapped[datetime] = mapped_column(DateTime(timezone=True))
     height: Mapped[float] = mapped_column(Float)

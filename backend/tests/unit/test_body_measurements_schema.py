@@ -9,6 +9,7 @@ from app.schemas.body_measurements import (
 
 def test_body_measurement_create():
     data = {
+        "id_user": 1,
         "measure_date": "2024-01-01T00:00:00+00:00",
         "height": 180.0,
         "neck": 40.0,
@@ -31,6 +32,7 @@ def test_body_measurement_create():
 
     body_measurement_create = BodyMeasurementCreate(**data)
 
+    assert body_measurement_create.id_user == data["id_user"]
     assert body_measurement_create.measure_date == datetime.fromisoformat(
         data["measure_date"]
     )
@@ -151,6 +153,7 @@ def test_body_measurement_update():
 
 def test_body_measurement_create_invalid_measure_date():
     data = {
+        "id_user": 1,
         "measure_date": "invalid_date",
         "height": 180.0,
         "neck": 40.0,
@@ -192,6 +195,7 @@ def test_body_measurement_update_invalid_measure_date():
 
 def test_body_measurement_create_invalid_height():
     data = {
+        "id_user": 1,
         "measure_date": "2024-01-01T00:00:00+00:00",
         "height": -180.0,  # Invalid height
         "neck": -40.0,
@@ -221,6 +225,7 @@ def test_body_measurement_create_invalid_height():
 
 def test_body_measurement_update_invalid_height():
     data = {
+        "id_user": 1,
         "height": -180.0,  # Invalid height
         "neck": -40.0,
         "neck_to_shoulder": -50.0,

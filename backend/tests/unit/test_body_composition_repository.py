@@ -14,7 +14,9 @@ from app.schemas.body_composition import (
 
 
 @pytest_asyncio.fixture
-async def setup_user_and_measurements(async_session: AsyncSession):
+async def setup_user_and_measurements(
+    async_session: AsyncSession,
+) -> tuple[User, BodyMeasurements]:
     # Create a user
     user = User(
         username="testuser",
@@ -73,10 +75,48 @@ async def test_repo_create_composition(
     )
 
     created_measurement = await composition_repo.create_body_composition(
-        async_session, create_data, id_user=user.id
+        async_session, create_data
     )
 
     assert created_measurement.id is not None
+
+
+@pytest.mark.asyncio
+async def test_repo_create_composition_minimal(
+    async_session: AsyncSession, setup_user_and_measurements
+):
+    user, measurements = setup_user_and_measurements
+    create_data = BodyCompositionCreate(
+        id_user=user.id,
+        id_measurements=measurements.id,
+        measure_date="2024-01-01T00:00:00",
+        weight=80,
+    )
+
+    created_measurement = await composition_repo.create_body_composition(
+        async_session, create_data
+    )
+
+    assert created_measurement.id is not None
+
+
+@pytest.mark.asyncio
+async def test_repo_create_missing_percentages(
+    async_session: AsyncSession, setup_user_and_measurements
+):
+    user, _ = setup_user_and_measurements
+    create_data = BodyCompositionCreate(
+        id_user=user.id,
+        measure_date="2024-01-01T00:00:00",
+        weight=80,
+    )
+
+    with pytest.raises(
+        ValueError, match="Insufficient data to create body composition"
+    ):
+        await composition_repo.create_body_composition(
+            async_session, create_data
+        )
 
 
 @pytest.mark.asyncio
@@ -94,14 +134,40 @@ async def test_repo_get_all_compositions(
         bone_percentage=0.05,
         water_percentage=0.35,
     )
-    await composition_repo.create_body_composition(
-        async_session, create_data, id_user=user.id
-    )
+    await composition_repo.create_body_composition(async_session, create_data)
 
     measurements = await composition_repo.get_body_compositions(async_session)
 
     assert len(measurements) == 1
     assert measurements[0].id_user == user.id
+
+
+@pytest.mark.asyncio
+async def test_repo_get_composition_by_id(
+    async_session: AsyncSession, setup_user_and_measurements
+):
+    user, measurements = setup_user_and_measurements
+    create_data = BodyCompositionCreate(
+        id_user=user.id,
+        id_measurements=measurements.id,
+        measure_date="2024-01-01T00:00:00",
+        weight=80,
+        fat_percentage=0.20,
+        muscle_percentage=0.40,
+        bone_percentage=0.05,
+        water_percentage=0.35,
+    )
+    created_composition = await composition_repo.create_body_composition(
+        async_session, create_data
+    )
+
+    composition = await composition_repo.get_body_composition_by_id(
+        async_session, id=created_composition.id
+    )
+
+    assert composition is not None
+    assert composition.id == created_composition.id
+    assert composition.id_user == user.id
 
 
 @pytest.mark.asyncio
@@ -119,9 +185,7 @@ async def test_repo_get_compositions_by_user_id(
         bone_percentage=0.05,
         water_percentage=0.35,
     )
-    await composition_repo.create_body_composition(
-        async_session, create_data, id_user=user.id
-    )
+    await composition_repo.create_body_composition(async_session, create_data)
     measurements = await composition_repo.get_body_composition_by_user_id(
         async_session, id_user=user.id
     )
@@ -146,7 +210,7 @@ async def test_repo_update_composition(
         water_percentage=0.35,
     )
     created_composition = await composition_repo.create_body_composition(
-        async_session, create_data, id_user=user.id
+        async_session, create_data
     )
     update_data = BodyCompositionUpdate(
         weight=85,
@@ -165,3 +229,32 @@ async def test_repo_update_composition(
     assert updated_composition.muscle_percentage == 0.38
     assert updated_composition.bone_percentage == 0.06
     assert updated_composition.water_percentage == 0.32
+
+
+@pytest.mark.asyncio
+async def test_repo_delete_composition(
+    async_session: AsyncSession, setup_user_and_measurements
+):
+    user, measurements = setup_user_and_measurements
+    create_data = BodyCompositionCreate(
+        id_user=user.id,
+        id_measurements=measurements.id,
+        measure_date="2024-01-01T00:00:00",
+        weight=80,
+        fat_percentage=0.20,
+        muscle_percentage=0.40,
+        bone_percentage=0.05,
+        water_percentage=0.35,
+    )
+    created_composition = await composition_repo.create_body_composition(
+        async_session, create_data
+    )
+
+    await composition_repo.delete_body_composition(
+        async_session, id=created_composition.id
+    )
+
+    composition = await composition_repo.get_body_composition_by_id(
+        async_session, id=created_composition.id
+    )
+    assert composition is None

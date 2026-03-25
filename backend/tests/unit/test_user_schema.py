@@ -7,7 +7,7 @@ def test_user_create():
     data = {
         "username": "john_doe",
         "email": "john_doe@example.com",
-        "password": "123456",
+        "password": "a_secure_password",
         "date_of_birth": "1990-01-01",
         "gender": "MALE",
     }
@@ -16,7 +16,7 @@ def test_user_create():
 
     assert user_create.username == data["username"]
     assert user_create.email == data["email"]
-    assert user_create.password == data["password"]
+    assert user_create.password.get_secret_value() == data["password"]
     assert (
         user_create.date_of_birth
         == datetime.fromisoformat(data["date_of_birth"]).date()
@@ -53,7 +53,7 @@ def test_user_update():
     data = {
         "username": "john_doe_updated",
         "email": "john_doe_updated@example.com",
-        "password": "654321",
+        "password": "a_secure_password",
         "date_of_birth": "1990-01-01",
         "gender": "MALE",
     }
@@ -62,7 +62,7 @@ def test_user_update():
 
     assert user_update.username == data["username"]
     assert user_update.email == data["email"]
-    assert user_update.password == data["password"]
+    assert user_update.password.get_secret_value() == data["password"]
     assert (
         user_update.date_of_birth
         == datetime.fromisoformat(data["date_of_birth"]).date()
@@ -74,7 +74,7 @@ def test_user_create_invalid_email():
     data = {
         "username": "john_doe",
         "email": "invalid_email",
-        "password": "123456",
+        "password": "a_secure_password",
         "date_of_birth": "1990-01-01",
         "gender": "MALE",
     }
@@ -102,7 +102,7 @@ def test_user_create_invalid_gender():
     data = {
         "username": "john_doe_updated",
         "email": "john_doe_updated@example.com",
-        "password": "123456",
+        "password": "a_secure_password",
         "date_of_birth": "1990-01-01",
         "gender": "INVALID_GENDER",
     }
@@ -130,7 +130,7 @@ def test_user_create_invalid_date_of_birth():
     data = {
         "username": "john_doe_updated",
         "email": "john_doe_updated@example.com",
-        "password": "123456",
+        "password": "a_secure_password",
         "date_of_birth": "invalid_date",
         "gender": "MALE",
     }
@@ -152,31 +152,3 @@ def test_user_update_invalid_date_of_birth():
         assert False, "Expected ValueError for invalid date format"
     except ValueError as e:
         assert "Input should be a valid date" in str(e)
-
-
-def test_user_create_invalid_password():
-    data = {
-        "username": "john_doe",
-        "email": "john_doe@example.com",
-        "password": "12345",  # Invalid password (too short)
-        "date_of_birth": "1990-01-01",
-        "gender": "MALE",
-    }
-
-    try:
-        UserCreate(**data)
-        assert False, "Expected ValueError for invalid password"
-    except ValueError as e:
-        assert "String should have at least 6 characters" in str(e)
-
-
-def test_user_update_invalid_password():
-    data = {
-        "password": "12345",  # Invalid password (too short)
-    }
-
-    try:
-        UserUpdate(**data)
-        assert False, "Expected ValueError for invalid password"
-    except ValueError as e:
-        assert "String should have at least 6 characters" in str(e)

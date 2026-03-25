@@ -5,7 +5,7 @@ Schemas for users in app.models.user.
 from datetime import date, datetime
 from typing import Optional
 
-from pydantic import BaseModel, EmailStr, Field
+from pydantic import BaseModel, EmailStr, Field, SecretStr
 
 from app.models.user import Gender
 
@@ -32,8 +32,8 @@ class UserCreate(UserBase):
     Schema for creating a new user.
     """
 
-    password: str = Field(
-        ..., description="Password for the user", min_length=6
+    password: SecretStr = Field(
+        ..., description="Plain text password for the user", min_length=6
     )
 
     model_config = {
@@ -43,7 +43,7 @@ class UserCreate(UserBase):
                 "email": "john_doe@example.com",
                 "date_of_birth": "1990-01-01",
                 "gender": "MALE",
-                "password": "securepassword123",
+                "password": "mysecretpassword",
             }
         }
     }
@@ -66,8 +66,8 @@ class UserUpdate(BaseModel):
     gender: Optional[Gender] = Field(
         None, description="Gender of the user (e.g., MALE, FEMALE, OTHER)"
     )
-    password: Optional[str] = Field(
-        None, description="Password for the user", min_length=6
+    password: Optional[SecretStr] = Field(
+        None, description="Plain text password for the user", min_length=6
     )
 
     model_config = {
@@ -77,7 +77,7 @@ class UserUpdate(BaseModel):
                 "email": "john_doe_updated@example.com",
                 "date_of_birth": "1990-01-01",
                 "gender": "MALE",
-                "password": "newsecurepassword123",
+                "password": "mynewsecretpassword",
             }
         }
     }

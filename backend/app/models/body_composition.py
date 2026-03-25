@@ -36,9 +36,11 @@ class BodyComposition(Base):
         Integer, primary_key=True, autoincrement=True
     )
 
-    id_user: Mapped[int] = mapped_column(ForeignKey("users.id"))
+    id_user: Mapped[int] = mapped_column(
+        ForeignKey("users.id", ondelete="CASCADE")
+    )
     id_measurements: Mapped[Optional[int]] = mapped_column(
-        ForeignKey("body_measurements.id")
+        ForeignKey("body_measurements.id", ondelete="SET NULL"), nullable=True
     )
 
     measure_date: Mapped[datetime] = mapped_column(DateTime)
