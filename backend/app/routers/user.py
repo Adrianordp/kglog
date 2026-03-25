@@ -1,6 +1,6 @@
 from typing import Annotated, List
 
-from fastapi import APIRouter, Depends, status
+from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.database import get_async_db
@@ -72,7 +72,9 @@ async def get_user_by_id_endpoint(
     user = await get_user_by_id(db, id)
 
     if not user:
-        raise ValueError(f"User with id {id} not found")
+        raise HTTPException(
+            status_code=404, detail=f"User with id {id} not found"
+        )
 
     return user
 
