@@ -87,3 +87,18 @@ async def update_body_measurement(
     await db.refresh(query_element)
 
     return query_element
+
+
+async def delete_body_measurement(db: AsyncSession, id: int) -> None:
+    """
+    Delete a body measurement by ID.
+    """
+    stmt = select(BodyMeasurements).where(BodyMeasurements.id == id)
+    query_result = await db.execute(stmt)
+    query_element = query_result.scalar_one_or_none()
+
+    if not query_element:
+        raise ValueError(f"Body measurement with id {id} not found")
+
+    await db.delete(query_element)
+    await db.commit()
