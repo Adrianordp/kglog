@@ -115,7 +115,9 @@ async def fat_percentage_formula(user: User, msmnt: BodyMeasurements) -> float:
     else:
         bf_woolcott = 64 - 20 * (msmnt.height / msmnt.waist)
 
-    return max(min(bf_woolcott, 1.0), 0.0)
+    bf_woolcott_perc = bf_woolcott / 100
+
+    return max(min(bf_woolcott_perc, 1.0), 0.0)
 
 
 async def water_percentage_formula(
@@ -250,6 +252,7 @@ async def muscle_percentage_formula(
 
     poortmans_asm_kg = (
         msmnt.height
+        / 100
         * (
             0.0064 * msmnt.left_arm * msmnt.right_arm
             + 0.0032 * msmnt.left_leg * msmnt.right_leg
